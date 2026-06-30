@@ -375,8 +375,7 @@ body {
   color: var(--muted);
   font-style: italic;
   opacity: 0.8;
-  text-align: left;
-  max-width: 100%;
+  text-align: center;
 }
 
 .btn-primary,
