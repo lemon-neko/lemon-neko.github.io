@@ -345,6 +345,8 @@ body {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.95rem;
   min-height: 1.5em;
+  max-width: 100%;
+  overflow: hidden;
 }
 .typewriter-text {
   display: inline-block;
@@ -374,6 +376,7 @@ body {
   color: var(--muted);
   font-style: italic;
   opacity: 0.8;
+  text-align: center;
 }
 
 .btn-primary,
