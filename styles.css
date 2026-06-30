@@ -337,45 +337,7 @@ body {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
-}
-
-/* Typewriter — hero motto (CSS width animation + blinking border cursor) */
-.typewriter {
-  margin: 0 0 1.25rem;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.95rem;
-  min-height: 1.5em;
-  max-width: 100%;
-}
-.typewriter-text {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 3px solid var(--accent-2);
-  animation:
-    typing 3.5s steps(30, end) forwards,
-    blink-caret 0.75s step-end infinite;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  width: 0;
-}
-@keyframes typing {
-  from { width: 0; }
-  to   { width: 100%; }
-}
-@keyframes blink-caret {
-  50% { border-color: transparent; }
-}
-
-.signature-zh {
-  margin: 0 0 1.25rem;
-  font-size: 0.9rem;
-  color: var(--muted);
-  font-style: italic;
-  opacity: 0.8;
-  text-align: center;
+  justify-content: center;
 }
 
 .btn-primary,
