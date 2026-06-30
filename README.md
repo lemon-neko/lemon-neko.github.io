@@ -19,8 +19,7 @@
 ├── styles.css          # 全局样式（CSS 变量、亮暗主题、响应式）
 ├── public/
 │   ├── favicon.svg     # 网站图标
-│   ├── pic.jpg         # 头像图片
-│   └── placeholder-hero.svg  # 备用 SVG 插画
+│   └── pic.jpg         # 头像图片
 ├── robots.txt          # 搜索引擎爬虫规则
 ├── sitemap.xml         # 站点地图
 └── README.md           # 本文档

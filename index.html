@@ -11,11 +11,12 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- 样式 & 图标 -->
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://lemon-neko.github.io/">
   <meta name="theme-color" content="#6b46ff">
 
   <!-- Open Graph / Twitter -->
@@ -142,6 +143,7 @@
     (function() {
       var STORAGE_KEY = 'site-theme';
       var themeToggle = document.getElementById('theme-toggle');
+      var themeColorMeta = document.querySelector('meta[name="theme-color"]');
 
       function getStored() {
         return localStorage.getItem(STORAGE_KEY);
@@ -152,6 +154,10 @@
           document.documentElement.classList.add('dark');
         } else {
           document.documentElement.classList.remove('dark');
+        }
+        // 同步 theme-color meta
+        if (themeColorMeta) {
+          themeColorMeta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#6b46ff');
         }
       }
 
@@ -184,6 +190,7 @@
       function open() {
         lastFocused = document.activeElement;
         menu.classList.remove('hidden');
+        menu.classList.add('open');
         menu.setAttribute('aria-hidden', 'false');
         requestAnimationFrame(function() {
           if (firstLink) firstLink.focus();
@@ -191,6 +198,7 @@
       }
 
       function close() {
+        menu.classList.remove('open');
         menu.classList.add('hidden');
         menu.setAttribute('aria-hidden', 'true');
         if (lastFocused) lastFocused.focus();
