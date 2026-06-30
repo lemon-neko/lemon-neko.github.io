@@ -21,10 +21,17 @@
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lemon-neko.github.io/">
   <meta property="og:title" content="羽白 — 个人网站">
   <meta property="og:description" content="羽白的个人网站 — AI、项目与随笔。">
   <meta property="og:image" content="/public/pic.jpg">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="羽白">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://lemon-neko.github.io/">
+  <meta name="twitter:title" content="羽白 — 个人网站">
+  <meta name="twitter:description" content="羽白的个人网站 — AI、项目与随笔。">
+  <meta name="twitter:image" content="/public/pic.jpg">
 
   <!-- JSON-LD 结构化数据 -->
   <script type="application/ld+json">
@@ -41,6 +48,15 @@
     "jobTitle": "个人网站维护者",
     "description": "羽白的个人网站，分享 AI、项目和随笔。"
   }
+  </script>
+
+  <!-- FOUC prevention: apply theme before render -->
+  <script>
+    (function() {
+      var theme = localStorage.getItem('site-theme') ||
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+    })();
   </script>
 </head>
 <body>
@@ -66,6 +82,9 @@
     </div>
   </nav>
 
+  <!-- 移动端菜单遮罩 -->
+  <div id="mobile-menu-overlay" class="hidden" aria-hidden="true"></div>
+
   <!-- 移动端菜单抽屉 -->
   <div id="mobile-menu" class="hidden" aria-hidden="true">
     <button id="mobile-menu-close" aria-label="关闭菜单">&#x2715;</button>
@@ -87,7 +106,7 @@
       <h1 class="hero-title">羽白</h1>
       <p class="lead">AI 从业者 · 技术与随笔 · 探索与思考</p>
       <p class="typewriter">
-        <span class="typewriter-text"></span><span class="typewriter-cursor">|</span>
+        <span class="typewriter-text">Enough abstraction makes it concrete.</span>
       </p>
       <p class="cta">
         <a class="btn-primary" href="#about">了解更多</a>
@@ -182,6 +201,7 @@
       var btn = document.getElementById('mobile-menu-btn');
       var menu = document.getElementById('mobile-menu');
       var closeBtn = document.getElementById('mobile-menu-close');
+      var overlay = document.getElementById('mobile-menu-overlay');
       if (!menu) return;
 
       var firstLink = menu.querySelector('a');
@@ -192,6 +212,10 @@
         menu.classList.remove('hidden');
         menu.classList.add('open');
         menu.setAttribute('aria-hidden', 'false');
+        if (overlay) {
+          overlay.classList.remove('hidden');
+          overlay.classList.add('open');
+        }
         requestAnimationFrame(function() {
           if (firstLink) firstLink.focus();
         });
@@ -201,6 +225,10 @@
         menu.classList.remove('open');
         menu.classList.add('hidden');
         menu.setAttribute('aria-hidden', 'true');
+        if (overlay) {
+          overlay.classList.remove('open');
+          overlay.classList.add('hidden');
+        }
         if (lastFocused) lastFocused.focus();
       }
 
@@ -211,6 +239,9 @@
       menu.addEventListener('click', function(e) {
         if (e.target === menu) close();
       });
+      if (overlay) {
+        overlay.addEventListener('click', close);
+      }
 
       // Escape 关闭
       document.addEventListener('keydown', function(e) {
@@ -276,22 +307,6 @@
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
       }
-    })();
-
-    // ===== Hero 打字机效果 =====
-    (function() {
-      var el = document.querySelector('.typewriter-text');
-      if (!el) return;
-      var text = 'Enough abstraction makes it concrete.';
-      var i = 0;
-      function type() {
-        if (i < text.length) {
-          el.textContent += text.charAt(i);
-          i++;
-          setTimeout(type, 80);
-        }
-      }
-      type();
     })();
   </script>
 </body>
