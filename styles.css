@@ -297,12 +297,20 @@ body {
   flex-wrap: wrap;
 }
 
-.signature {
+/* Typewriter — hero motto */
+.typewriter {
   margin: 0 0 1.25rem;
-  font-style: italic;
-  color: var(--muted);
+  font-family: "JetBrains Mono", monospace;
   font-size: 0.95rem;
-  opacity: 0.8;
+  color: var(--text);
+  min-height: 1.5em;
+}
+.typewriter-cursor {
+  animation: blink 1s step-end infinite;
+  color: var(--accent-2);
+}
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 .btn-primary,
