@@ -297,6 +297,14 @@ body {
   flex-wrap: wrap;
 }
 
+.signature {
+  margin: 0 0 1.25rem;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
 .btn-primary,
 .btn-ghost {
   display: inline-flex;
