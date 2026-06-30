@@ -368,6 +368,14 @@ body {
   50% { border-color: transparent; }
 }
 
+.signature-zh {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+  opacity: 0.8;
+}
+
 .btn-primary,
 .btn-ghost {
   display: inline-flex;
