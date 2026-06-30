@@ -7,8 +7,14 @@
   <meta name="description" content="柠檬茶与猫的个人网站 — AI、项目与随笔。" />
   <meta name="keywords" content="柠檬茶与猫, 个人网站, AI, 博客" />
   <meta name="author" content="柠檬茶与猫" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml" />
   <meta name="theme-color" content="#6b46ff" />
 
   <!-- Open Graph / Twitter -->
@@ -17,18 +23,37 @@
   <meta property="og:description" content="柠檬茶与猫的个人网站 — AI、项目与随笔。" />
   <meta property="og:image" content="https://raw.githubusercontent.com/adongwanai/adongwanai.github.io/main/public/placeholder-hero.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- JSON-LD Person schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "柠檬茶与猫",
+    "url": "https://lemon-neko.github.io",
+    "image": "https://raw.githubusercontent.com/adongwanai/adongwanai.github.io/main/public/placeholder-hero.jpg",
+    "sameAs": [
+      "https://github.com/lemon-neko",
+      "https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6"
+    ],
+    "jobTitle": "个人网站维护者",
+    "description": "柠檬茶与猫的个人网站，分享 AI、项目和随笔。"
+  }
+  </script>
 </head>
 <body>
   <nav class="site-nav" role="navigation" aria-label="主导航">
     <div class="nav-brand">柠檬茶与猫</div>
 
     <ul class="desktop-links">
-      <li><a href="#home">首页</a></li>
+      <li><a href="/">首页</a></li>
       <li><a href="#about">关于</a></li>
       <li><a href="#contact">联系</a></li>
     </ul>
 
     <div class="nav-actions">
+      <a class="social-link" href="https://github.com/lemon-neko" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
+      <a class="social-link" href="https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6" target="_blank" rel="noopener" aria-label="微信公众号">微信</a>
       <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">🌓</button>
       <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="打开菜单">☰</button>
     </div>
@@ -37,7 +62,7 @@
   <div id="mobile-menu" class="hidden" aria-hidden="true">
     <button id="mobile-menu-close" aria-label="关闭菜单">✕</button>
     <nav>
-      <a href="#home">首页</a>
+      <a href="/">首页</a>
       <a href="#about">关于</a>
       <a href="#contact">联系</a>
       <a href="https://github.com/lemon-neko" target="_blank" rel="noopener">GitHub</a>
@@ -47,10 +72,27 @@
   <!-- Reading progress bar -->
   <div id="reading-progress"></div>
 
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">柠檬茶与猫</h1>
+      <p class="lead">AI 爱好者 · 项目与随笔 · 偶尔调试猫粮</p>
+      <p class="cta">
+        <a class="btn-primary" href="#about">了解更多</a>
+        <a class="btn-ghost" href="https://github.com/lemon-neko" target="_blank">查看 GitHub</a>
+      </p>
+    </div>
+    <div class="hero-figure">
+      <img class="hero-illustration" src="/public/placeholder-hero.jpg" alt="hero illustration">
+    </div>
+  </header>
+
   <main class="container" id="home">
-    <h1>Hello，大家好</h1>
-    <p>我是柠檬茶与猫，这是我的个人网站。</p>
-    <p>很高兴你来到这里。</p>
+    <section id="intro">
+      <h2>欢迎</h2>
+      <p>我是柠檬茶与猫，这是我的个人网站。</p>
+      <p>很高兴你来到这里。</p>
+    </section>
 
     <section id="about" aria-labelledby="about-heading">
       <h2 id="about-heading">关于我</h2>
@@ -79,9 +121,7 @@
 
     // Theme: read/write localStorage, set .dark on documentElement
     const themeToggle = document.getElementById('theme-toggle');
-    function getStoredTheme() {
-      return localStorage.getItem('site-theme');
-    }
+    function getStoredTheme() { return localStorage.getItem('site-theme'); }
     function applyTheme(theme) {
       if (theme === 'dark') document.documentElement.classList.add('dark');
       else document.documentElement.classList.remove('dark');
@@ -100,11 +140,8 @@
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuClose = document.getElementById('mobile-menu-close');
     mobileMenuBtn?.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('hidden');
-      mobileMenu.setAttribute('aria-hidden', String(isOpen));
-      // also toggle overlay class if present
-      const overlay = document.getElementById('mobile-menu-overlay');
-      if (overlay) overlay.classList.toggle('open');
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.setAttribute('aria-hidden', String(mobileMenu.classList.contains('hidden')));
     });
     mobileMenuClose?.addEventListener('click', () => mobileMenu.classList.add('hidden'));
 
