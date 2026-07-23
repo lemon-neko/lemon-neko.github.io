@@ -1,5 +1,5 @@
 /* ==========================================================================
-   羽白 — 个人网站样式表
+   Lemon Neko — Personal Site
    ========================================================================== */
 
 /* ---------- 颜色变量 ---------- */
@@ -8,19 +8,20 @@
   --card: #ffffff;
   --text: #111827;
   --muted: #6b7280;
+  --border: rgba(128, 128, 128, 0.12);
   --accent: #ffb86b;
   --accent-2: #6b46ff;
 }
 
-/* 深色模式变量 */
 :root.dark,
 .dark {
   --bg: #0b1220;
-  --card: #0f1724;
+  --card: #111827;
   --text: #e6eef8;
   --muted: #9aa6bf;
   --accent: #ffb86b;
   --accent-2: #8b5cf6;
+  --border: rgba(255, 255, 255, 0.06);
 }
 
 /* ---------- 全局重置 ---------- */
@@ -41,7 +42,7 @@ html {
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -56,71 +57,67 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
-  border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+  padding: 0.875rem 1.25rem;
   position: sticky;
   top: 0;
   z-index: 40;
   backdrop-filter: blur(12px);
-}
-
-.dark .site-nav {
-  background: linear-gradient(90deg, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.4));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
 .site-nav .nav-brand {
   font-weight: 700;
   color: var(--text);
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
 }
 
 .site-nav ul {
   list-style: none;
   display: flex;
-  gap: 0.75rem;
+  gap: 0.25rem;
   margin: 0;
   padding: 0;
 }
 
 .site-nav a {
-  color: var(--text);
+  color: var(--muted);
   text-decoration: none;
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
+  font-size: 0.875rem;
+  transition: color 150ms, background 150ms;
 }
 
 .site-nav a:hover {
-  background: rgba(0, 0, 0, 0.04);
+  color: var(--text);
+  background: rgba(128, 128, 128, 0.06);
 }
 
 /* ---------- 主题切换按钮 ---------- */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   padding: 0.35rem;
   border-radius: 8px;
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border);
   cursor: pointer;
   min-height: 44px;
   min-width: 44px;
   justify-content: center;
+  color: var(--text);
+  font-size: 1rem;
 }
 
-.dark .theme-toggle {
-  border-color: rgba(255, 255, 255, 0.06);
-}
-
-/* ---------- 社交链接 ---------- */
+/* ---------- 社交链接（导航栏） ---------- */
 .social-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
   color: var(--muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   transition: color 150ms;
 }
 
@@ -128,7 +125,7 @@ body {
   color: var(--accent-2);
 }
 
-/* ---------- 移动端菜单按钮 ---------- */
+/* ---------- 移动端菜单 ---------- */
 .mobile-menu-btn {
   display: none;
   background: transparent;
@@ -144,7 +141,6 @@ body {
   align-items: center;
 }
 
-/* ---------- 移动端菜单遮罩 ---------- */
 #mobile-menu-overlay {
   position: fixed;
   inset: 0;
@@ -161,7 +157,6 @@ body {
   pointer-events: auto;
 }
 
-/* ---------- 移动端菜单抽屉 ---------- */
 #mobile-menu {
   position: fixed;
   top: 0;
@@ -244,7 +239,7 @@ body {
   width: 0;
 }
 
-/* ---------- 回到顶部按钮 ---------- */
+/* ---------- 回到顶部 ---------- */
 #back-to-top {
   position: fixed;
   right: 1rem;
@@ -270,221 +265,27 @@ body {
   pointer-events: auto;
 }
 
-/* ---------- 主体容器 ---------- */
-.container {
-  max-width: 900px;
-  margin: 3rem auto;
-  padding: 1.25rem;
-  background: var(--card);
-  border-radius: 10px;
-  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
-}
-
-.container h1 {
-  margin-top: 0;
-}
-
-/* ---------- Connect / Social Cards ---------- */
-.connect-label {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--muted);
-  text-align: center;
-  margin: 0 0 1.5rem;
-  text-transform: uppercase;
-}
-
-.social-cards {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.social-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 10px;
-  background: var(--bg);
-  border: 1px solid rgba(128, 128, 128, 0.12);
-  text-decoration: none;
-  transition: border-color 200ms, background 200ms, transform 200ms;
-  min-width: 180px;
-}
-
-.social-card:hover {
-  border-color: var(--accent-2);
-  background: rgba(107, 70, 255, 0.04);
-  transform: translateY(-2px);
-}
-
-.social-card-icon {
-  font-size: 1.5rem;
-  transition: transform 200ms;
-}
-
-.social-card:hover .social-card-icon {
-  transform: scale(1.1);
-}
-
-.social-card-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.social-card-name {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.social-card-handle {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.7rem;
-  color: var(--muted);
-}
-
-.container ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.container ul li {
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.container ul li a {
-  color: var(--accent-2);
-  text-decoration: none;
-}
-
-.container ul li a:hover {
-  text-decoration: underline;
-}
-
-/* ---------- About 区域 ---------- */
-.about-grid {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-}
-
-.about-label {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--accent-2);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding-top: 0.15rem;
-}
-
-.about-content {
-  min-width: 0;
-}
-
-/* 时间线 */
-.timeline {
-  position: relative;
-  padding-left: 1.25rem;
-  border-left: 2px solid var(--muted);
-  opacity: 0.18;
-}
-
-.timeline-item {
-  position: relative;
-  margin-bottom: 2rem;
-}
-
-.timeline-item:last-child {
-  margin-bottom: 0;
-}
-
-.timeline-dot {
-  position: absolute;
-  left: calc(-1.25rem - 4px);
-  top: 0.3rem;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent-2);
-  box-shadow: 0 0 0 4px var(--bg);
-}
-
-.timeline-item h3 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin: 0 0 0.4rem;
-  color: var(--text);
-}
-
-.timeline-item p {
-  color: var(--muted);
-  font-size: 0.925rem;
-  line-height: 1.7;
-  margin: 0;
-}
-
-/* 理念引用 */
-.philosophy {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin: 0 0 0.75rem;
-  color: var(--text);
-  line-height: 1.6;
-}
-
-.about-content p {
-  color: var(--muted);
-  font-size: 0.925rem;
-  line-height: 1.7;
-}
-
-/* ---------- 页脚 ---------- */
-.site-footer {
-  margin: 3rem 0 2rem;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.footer-links a {
-  color: var(--muted);
-  text-decoration: none;
-  margin-left: 0.75rem;
-}
-
-.footer-links a:hover {
-  color: var(--accent-2);
-}
-
-/* ---------- Hero 区域 ---------- */
+/* ---------- Hero ---------- */
 .hero {
   max-width: 900px;
-  margin: 2rem auto 0;
-  padding: 2rem 1.25rem 2.5rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem 0;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 .hero-inner {
   flex: 1;
-  max-width: 560px;
+  max-width: 540px;
 }
 
 .hero-title {
-  margin: 0 0 0.5rem;
-  font-size: 1.75rem;
-  line-height: 1.25;
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -492,35 +293,47 @@ body {
 }
 
 .hero-tagline {
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--muted);
   letter-spacing: 0.02em;
-  margin: 0 0 1rem;
+  margin: 0 0 1.5rem;
 }
 
 .lead {
   color: var(--muted);
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
   font-size: 1rem;
+  line-height: 1.7;
 }
 
 .cta {
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 1.25rem;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
-/* Typewriter — hero motto (CSS width animation + blinking border cursor) */
+.cta-link {
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.cta-link:hover {
+  color: var(--accent-2);
+}
+
+/* Typewriter */
 .typewriter {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   min-height: 1.5em;
   max-width: 100%;
 }
+
 .typewriter-text {
   display: block;
   overflow: hidden;
@@ -535,55 +348,25 @@ body {
   background-clip: text;
   width: 0;
 }
+
 @keyframes typing {
   from { width: 0; }
   to   { width: 100%; }
 }
+
 @keyframes blink-caret {
   50% { border-color: transparent; }
 }
 
-.btn-primary,
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.25rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: transform 150ms, box-shadow 150ms;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(107, 70, 255, 0.25);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid rgba(128, 128, 128, 0.25);
-}
-
-.btn-ghost:hover {
-  border-color: var(--accent-2);
-  color: var(--accent-2);
-}
-
+/* Hero avatar */
 .hero-figure {
   flex-shrink: 0;
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: var(--card);
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -593,10 +376,261 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
 }
 
-/* ---------- 跳转链接 ---------- */
+/* ---------- 按钮 ---------- */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: transform 150ms, box-shadow 150ms;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 70, 255, 0.25);
+}
+
+/* ---------- Section 通用 ---------- */
+.section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem;
+}
+
+.section-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0 0 1.5rem;
+}
+
+.section-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.section-desc {
+  color: var(--muted);
+  font-size: 0.925rem;
+  line-height: 1.7;
+  margin: 0 0 2.5rem;
+  max-width: 540px;
+}
+
+/* ---------- Currently ---------- */
+.currently-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.currently-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.currently-emoji {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.currently-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.15rem;
+  letter-spacing: 0.02em;
+}
+
+.currently-desc {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ---------- Projects ---------- */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.project-card {
+  display: block;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 200ms, transform 200ms;
+}
+
+.project-card:hover {
+  border-color: var(--accent-2);
+  transform: translateY(-2px);
+}
+
+.project-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin: 0 0 0.75rem;
+}
+
+.project-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.01em;
+}
+
+.project-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---------- About Preview ---------- */
+.about-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 560px;
+  margin: 0 0 1.5rem;
+}
+
+.about-text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.interests {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.interest-tag {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  text-decoration: none;
+  transition: border-color 150ms, color 150ms;
+}
+
+.interest-tag:hover {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+/* ---------- Connect ---------- */
+.connect-grid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.connect-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 200ms, transform 200ms;
+  min-width: 180px;
+}
+
+.connect-card:hover {
+  border-color: var(--accent-2);
+  transform: translateY(-2px);
+}
+
+.connect-emoji {
+  font-size: 1.5rem;
+  transition: transform 200ms;
+}
+
+.connect-card:hover .connect-emoji {
+  transform: scale(1.1);
+}
+
+.connect-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.connect-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.connect-handle {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.footer-links a:hover {
+  color: var(--accent-2);
+}
+
+/* ---------- Utilities ---------- */
 .skip-link {
   position: absolute;
   top: -100%;
@@ -614,7 +648,6 @@ body {
   top: 0.5rem;
 }
 
-/* ---------- 工具类 ---------- */
 .hidden {
   display: none;
 }
@@ -623,11 +656,6 @@ body {
 @media (max-width: 640px) {
   .site-nav {
     padding: 0.75rem;
-  }
-
-  .container {
-    margin: 1.25rem;
-    padding: 1rem;
   }
 
   .site-nav ul {
@@ -645,7 +673,12 @@ body {
   .hero {
     flex-direction: column;
     text-align: center;
-    padding: 1.5rem 1rem 2rem;
+    padding: 2.5rem 1rem 0;
+    gap: 1.5rem;
+  }
+
+  .hero-inner {
+    max-width: 100%;
   }
 
   .hero-figure {
@@ -657,26 +690,30 @@ body {
     justify-content: center;
   }
 
-  .social-cards {
-    flex-direction: column;
-    align-items: center;
+  .section {
+    padding: 3rem 1rem;
   }
 
-  .social-card {
-    width: 100%;
-    max-width: 280px;
-  }
-
-  .about-grid {
+  .currently-grid {
     grid-template-columns: 1fr;
-    gap: 0.5rem;
+    gap: 1.25rem;
   }
 
-  .timeline {
-    padding-left: 1rem;
+  .projects-grid {
+    grid-template-columns: 1fr;
   }
 
-  .timeline-dot {
-    left: calc(-1rem - 4px);
+  .connect-grid {
+    flex-direction: column;
+  }
+
+  .connect-card {
+    width: 100%;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
   }
 }

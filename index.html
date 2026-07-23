@@ -3,37 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>羽白 — 个人网站</title>
-  <meta name="description" content="羽白的个人网站 — AI、项目与随笔。">
-  <meta name="keywords" content="羽白, 个人网站, AI, 博客">
+  <title>羽白 — AI Engineer</title>
+  <meta name="description" content="羽白 — AI Engineer, Builder, Observer. 构建AI系统，探索技术与人的关系。">
   <meta name="author" content="羽白">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 样式 & 图标 -->
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://lemon-neko.github.io/">
   <meta name="theme-color" content="#6b46ff">
 
-  <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://lemon-neko.github.io/">
-  <meta property="og:title" content="羽白 — 个人网站">
-  <meta property="og:description" content="羽白的个人网站 — AI、项目与随笔。">
+  <meta property="og:title" content="羽白 — AI Engineer">
+  <meta property="og:description" content="羽白 — 构建AI系统，探索技术与人的关系。">
   <meta property="og:image" content="/public/pic.jpg">
   <meta property="og:locale" content="zh_CN">
-  <meta property="og:site_name" content="羽白">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://lemon-neko.github.io/">
-  <meta name="twitter:title" content="羽白 — 个人网站">
-  <meta name="twitter:description" content="羽白的个人网站 — AI、项目与随笔。">
+  <meta name="twitter:title" content="羽白 — AI Engineer">
+  <meta name="twitter:description" content="构建AI系统，探索技术与人的关系。">
   <meta name="twitter:image" content="/public/pic.jpg">
 
-  <!-- JSON-LD 结构化数据 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -45,12 +39,11 @@
       "https://github.com/lemon-neko",
       "https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6"
     ],
-    "jobTitle": "个人网站维护者",
-    "description": "羽白的个人网站，分享 AI、项目和随笔。"
+    "jobTitle": "AI Engineer",
+    "description": "构建AI系统，探索技术与人的关系。"
   }
   </script>
 
-  <!-- FOUC prevention: apply theme before render -->
   <script>
     (function() {
       var theme = localStorage.getItem('site-theme') ||
@@ -61,54 +54,54 @@
 </head>
 <body>
 
-  <!-- 跳转链接 -->
   <a href="#home" class="skip-link">跳转到内容</a>
 
-  <!-- 导航栏 -->
   <nav class="site-nav" role="navigation" aria-label="主导航">
-    <div class="nav-brand">羽白</div>
-
+    <a class="nav-brand" href="/">羽白</a>
     <ul class="desktop-links">
       <li><a href="/">首页</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">关于</a></li>
       <li><a href="#contact">联系</a></li>
     </ul>
-
     <div class="nav-actions">
-      <a class="social-link" href="https://github.com/lemon-neko" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
-      <a class="social-link" href="https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6" target="_blank" rel="noopener" aria-label="微信公众号">微信公众号</a>
-      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">&#x1F315;</button>
-      <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="打开菜单">&#x2630;</button>
+      <a class="social-link" href="https://github.com/lemon-neko" target="_blank" rel="noopener">GitHub</a>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="打开菜单">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
   </nav>
 
-  <!-- 移动端菜单遮罩 -->
   <div id="mobile-menu-overlay" class="hidden" aria-hidden="true"></div>
 
-  <!-- 移动端菜单抽屉 -->
   <div id="mobile-menu" class="hidden" aria-hidden="true">
-    <button id="mobile-menu-close" aria-label="关闭菜单">&#x2715;</button>
+    <button id="mobile-menu-close" aria-label="关闭菜单">&times;</button>
     <nav>
       <a href="/">首页</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">关于</a>
       <a href="#contact">联系</a>
       <a href="https://github.com/lemon-neko" target="_blank" rel="noopener">GitHub</a>
       <a href="https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6" target="_blank" rel="noopener">微信公众号</a>
     </nav>
   </div>
 
-  <!-- 阅读进度条 -->
   <div id="reading-progress" aria-hidden="true"></div>
 
-  <!-- Hero -->
-  <header class="hero">
+  <header class="hero" id="home">
     <div class="hero-inner">
       <h1 class="hero-title">羽白</h1>
-      <p class="hero-tagline">AI Engineer | Builder | Observer</p>
-      <p class="lead">足够抽象才足够具体</p>
+      <p class="hero-tagline">AI Engineer · Builder · Observer</p>
       <p class="typewriter">
         <span class="typewriter-text">Enough abstraction makes it concrete.</span>
       </p>
+      <p class="lead">构建 AI 系统，探索技术、人类与未来之间的关系。</p>
       <p class="cta">
-        <a class="btn-primary" href="#about">了解更多</a>
+        <a class="btn-primary" href="#projects">Projects</a>
+        <a class="cta-link" href="#contact">联系 &rarr;</a>
       </p>
     </div>
     <div class="hero-figure">
@@ -116,195 +109,190 @@
     </div>
   </header>
 
-  <!-- 主内容 -->
-  <main class="container" id="home">
-    <section id="contact" aria-labelledby="contact-heading">
-      <p class="connect-label">CONNECT WITH ME</p>
-      <div class="social-cards">
-        <a href="https://github.com/lemon-neko" target="_blank" rel="noopener" class="social-card">
-          <span class="social-card-icon">📦</span>
-          <div class="social-card-info">
-            <span class="social-card-name">GitHub</span>
-            <span class="social-card-handle">@lemon-neko</span>
-          </div>
-        </a>
-        <a href="https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6" target="_blank" rel="noopener" class="social-card">
-          <span class="social-card-icon">💬</span>
-          <div class="social-card-info">
-            <span class="social-card-name">微信公众号</span>
-            <span class="social-card-handle">羽白的幻想栈</span>
-          </div>
-        </a>
+  <section class="section" id="currently">
+    <p class="section-label">Currently</p>
+    <div class="currently-grid">
+      <div class="currently-item">
+        <span class="currently-emoji">🚀</span>
+        <div>
+          <p class="currently-label">Building</p>
+          <p class="currently-desc">AI-powered applications</p>
+        </div>
       </div>
-    </section>
-  </main>
+      <div class="currently-item">
+        <span class="currently-emoji">🧪</span>
+        <div>
+          <p class="currently-label">Exploring</p>
+          <p class="currently-desc">LLM / Agent / Human-AI Interaction</p>
+        </div>
+      </div>
+      <div class="currently-item">
+        <span class="currently-emoji">✍️</span>
+        <div>
+          <p class="currently-label">Writing</p>
+          <p class="currently-desc">Thoughts about AI, technology and future</p>
+        </div>
+      </div>
+      <div class="currently-item">
+        <span class="currently-emoji">🎙</span>
+        <div>
+          <p class="currently-label">Creating</p>
+          <p class="currently-desc">Videos & Podcast</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- 页脚 -->
+  <section class="section" id="projects">
+    <p class="section-label">Featured Projects</p>
+    <h2 class="section-heading">Things I've built</h2>
+    <p class="section-desc">不只是代码 — 为什么创造，以及从中发现了什么。</p>
+    <div class="projects-grid">
+      <a href="https://github.com/lemon-neko" target="_blank" rel="noopener" class="project-card">
+        <p class="project-tag">Coming Soon</p>
+        <p class="project-name">Project Alpha</p>
+        <p class="project-desc">AI-powered workflow automation.</p>
+      </a>
+      <a href="https://github.com/lemon-neko" target="_blank" rel="noopener" class="project-card">
+        <p class="project-tag">Experiment</p>
+        <p class="project-name">Experiment #001</p>
+        <p class="project-desc">Testing the boundaries of LLM reasoning.</p>
+      </a>
+      <a href="https://github.com/lemon-neko" target="_blank" rel="noopener" class="project-card">
+        <p class="project-tag">Open Source</p>
+        <p class="project-name">Project Gamma</p>
+        <p class="project-desc">A tool for developers building with AI.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <p class="section-label">About</p>
+    <p class="about-text">
+      I am an <strong>AI engineer</strong>.<br>
+      I build things, and think about the systems behind them.<br><br>
+      通过构建系统、记录思考和实践实验，<br>
+      探索 AI 时代技术与人的关系。
+    </p>
+    <ul class="interests">
+      <li><a class="interest-tag" href="#">Artificial Intelligence</a></li>
+      <li><a class="interest-tag" href="#">Software Engineering</a></li>
+      <li><a class="interest-tag" href="#">Human-AI Interaction</a></li>
+      <li><a class="interest-tag" href="#">Future of Work</a></li>
+    </ul>
+  </section>
+
+  <section class="section" id="contact">
+    <p class="section-label">Connect</p>
+    <div class="connect-grid">
+      <a href="https://github.com/lemon-neko" target="_blank" rel="noopener" class="connect-card">
+        <span class="connect-emoji">📦</span>
+        <div class="connect-info">
+          <span class="connect-name">GitHub</span>
+          <span class="connect-handle">@lemon-neko</span>
+        </div>
+      </a>
+      <a href="https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6" target="_blank" rel="noopener" class="connect-card">
+        <span class="connect-emoji">💬</span>
+        <div class="connect-info">
+          <span class="connect-name">微信公众号</span>
+          <span class="connect-handle">羽白的幻想栈</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
   <footer class="site-footer" role="contentinfo">
-    <div>&copy; <span id="year"></span> 羽白 — 版权所有</div>
+    <div>&copy; <span id="year"></span> 羽白</div>
     <div class="footer-links">
       <a href="https://github.com/lemon-neko" target="_blank" rel="noopener">GitHub</a>
       <a href="https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6" target="_blank" rel="noopener">微信公众号</a>
     </div>
   </footer>
 
-  <!-- 回到顶部 -->
-  <button id="back-to-top" aria-label="回到顶部">&#x2191;</button>
+  <button id="back-to-top" aria-label="回到顶部">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
-  <!-- 脚本 -->
   <script>
-    // ===== 年份自动更新 =====
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ===== 主题切换（localStorage + prefers-color-scheme） =====
     (function() {
-      var STORAGE_KEY = 'site-theme';
-      var themeToggle = document.getElementById('theme-toggle');
-      var themeColorMeta = document.querySelector('meta[name="theme-color"]');
-
-      function getStored() {
-        return localStorage.getItem(STORAGE_KEY);
+      var KEY = 'site-theme';
+      var toggle = document.getElementById('theme-toggle');
+      var meta = document.querySelector('meta[name="theme-color"]');
+      function apply(t) {
+        document.documentElement.classList.toggle('dark', t === 'dark');
+        if (meta) meta.setAttribute('content', t === 'dark' ? '#0b1220' : '#6b46ff');
       }
-
-      function apply(theme) {
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-        // 同步 theme-color meta
-        if (themeColorMeta) {
-          themeColorMeta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#6b46ff');
-        }
-      }
-
-      // 初始化主题
-      var initial = getStored() ||
+      var init = localStorage.getItem(KEY) ||
         (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      apply(initial);
-
-      // 切换按钮
-      if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-          var current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-          var next = current === 'dark' ? 'light' : 'dark';
-          apply(next);
-          localStorage.setItem(STORAGE_KEY, next);
-        });
-      }
+      apply(init);
+      if (toggle) toggle.addEventListener('click', function() {
+        var cur = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        var next = cur === 'dark' ? 'light' : 'dark';
+        apply(next);
+        localStorage.setItem(KEY, next);
+      });
     })();
 
-    // ===== 移动端菜单 =====
     (function() {
       var btn = document.getElementById('mobile-menu-btn');
       var menu = document.getElementById('mobile-menu');
       var closeBtn = document.getElementById('mobile-menu-close');
       var overlay = document.getElementById('mobile-menu-overlay');
       if (!menu) return;
-
       var firstLink = menu.querySelector('a');
       var lastFocused = null;
-
       function open() {
         lastFocused = document.activeElement;
         menu.classList.remove('hidden');
         menu.classList.add('open');
         menu.setAttribute('aria-hidden', 'false');
-        if (overlay) {
-          overlay.classList.remove('hidden');
-          overlay.classList.add('open');
-        }
-        requestAnimationFrame(function() {
-          if (firstLink) firstLink.focus();
-        });
+        if (overlay) { overlay.classList.remove('hidden'); overlay.classList.add('open'); }
+        requestAnimationFrame(function() { if (firstLink) firstLink.focus(); });
       }
-
       function close() {
         menu.classList.remove('open');
         menu.classList.add('hidden');
         menu.setAttribute('aria-hidden', 'true');
-        if (overlay) {
-          overlay.classList.remove('open');
-          overlay.classList.add('hidden');
-        }
+        if (overlay) { overlay.classList.remove('open'); overlay.classList.add('hidden'); }
         if (lastFocused) lastFocused.focus();
       }
-
       if (btn) btn.addEventListener('click', open);
       if (closeBtn) closeBtn.addEventListener('click', close);
-
-      // 点击遮罩关闭
-      menu.addEventListener('click', function(e) {
-        if (e.target === menu) close();
-      });
-      if (overlay) {
-        overlay.addEventListener('click', close);
-      }
-
-      // Escape 关闭
+      menu.addEventListener('click', function(e) { if (e.target === menu) close(); });
+      if (overlay) overlay.addEventListener('click', close);
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
-          close();
-        }
+        if (e.key === 'Escape' && !menu.classList.contains('hidden')) close();
       });
-
-      // 焦点陷阱
       menu.addEventListener('keydown', function(e) {
         if (e.key !== 'Tab') return;
-        var focusable = Array.prototype.slice.call(menu.querySelectorAll('a, button')).filter(function(el) {
-          return !el.disabled;
-        });
+        var focusable = Array.prototype.slice.call(menu.querySelectorAll('a, button')).filter(function(el) { return !el.disabled; });
         if (focusable.length === 0) return;
-        var first = focusable[0];
-        var last = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
+        var first = focusable[0], last = focusable[focusable.length - 1];
+        if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+        else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
       });
     })();
 
-    // ===== 阅读进度条 & 回到顶部（rAF 节流） =====
     (function() {
-      var progressBar = document.getElementById('reading-progress');
-      var backBtn = document.getElementById('back-to-top');
-      if (!progressBar) return;
-
+      var bar = document.getElementById('reading-progress');
+      var btn = document.getElementById('back-to-top');
+      if (!bar) return;
       var ticking = false;
-
       window.addEventListener('scroll', function() {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(function() {
-          var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-          var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-          var ratio = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
-          progressBar.style.width = Math.min(100, Math.max(0, ratio * 100)) + '%';
-
-          if (backBtn) {
-            if (scrollTop > 300) {
-              backBtn.classList.add('visible');
-            } else {
-              backBtn.classList.remove('visible');
-            }
-          }
-
+          var st = document.documentElement.scrollTop || document.body.scrollTop;
+          var sh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          bar.style.width = (sh > 0 ? Math.min(100, Math.max(0, st / sh * 100)) : 0) + '%';
+          if (btn) btn.classList.toggle('visible', st > 300);
           ticking = false;
         });
       });
-
-      if (backBtn) {
-        backBtn.addEventListener('click', function() {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      }
+      if (btn) btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
     })();
   </script>
 </body>
