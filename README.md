@@ -5,6 +5,7 @@
 ## 页面内容
 
 - 个人身份、头像与简介
+- 可输入命令的互动个人终端 Playground
 - 当前关注和正在进行的方向
 - About 与兴趣领域
 - GitHub 和微信公众号入口
@@ -18,6 +19,7 @@
 .
 ├── index.html
 ├── styles.css
+├── terminal.js
 ├── public/
 │   ├── favicon.svg
 │   └── pic.jpg
@@ -26,12 +28,16 @@
 └── README.md
 ```
 
+## Playground 命令
+
+终端支持 `help`、`about`、`now`、`links`、`fortune`、`echo <text>` 和 `clear`。使用上下方向键可浏览命令历史，按 `Ctrl/⌘ + L` 可快速清屏。
+
 ## 本地预览
 
 项目不需要构建工具，可直接打开 `index.html`，或启动静态服务器：
 
 ```bash
-python3 -m http.server 8080
+python3 -m http.server --bind 127.0.0.1 8080
 ```
 
 然后访问 `http://localhost:8080`。

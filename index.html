@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="public/favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://lemon-neko.github.io/">
+  <script src="terminal.js" defer></script>
 
   <meta property="og:type" content="profile">
   <meta property="og:url" content="https://lemon-neko.github.io/">
@@ -48,6 +49,7 @@
     <div class="nav-inner">
       <a class="nav-brand" href="#home" aria-label="返回首页">羽白</a>
       <div class="nav-links">
+        <a href="#playground">Playground</a>
         <a href="#about">About</a>
         <a href="#connect">Connect</a>
       </div>
@@ -71,6 +73,48 @@
         <img src="public/pic.jpg" alt="羽白" width="320" height="400">
       </figure>
     </header>
+
+    <section class="section playground" id="playground" aria-labelledby="playground-title">
+      <div class="section-heading">
+        <p class="section-label">Playground</p>
+        <h2 id="playground-title">访客终端</h2>
+      </div>
+      <div class="terminal-shell" data-terminal>
+        <div class="terminal-bar">
+          <div class="terminal-dots" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p class="terminal-title">visitor@yubai — ~/playground</p>
+          <span class="terminal-status" aria-hidden="true">interactive</span>
+        </div>
+        <div class="terminal-screen">
+          <div id="terminal-output" class="terminal-output" role="log" aria-live="polite" aria-relevant="additions text">
+            <p class="terminal-line terminal-entry terminal-boot">yubai.dev personal terminal v1.0</p>
+            <p class="terminal-line terminal-entry terminal-boot">连接成功。输入 <code>help</code> 开始探索。</p>
+          </div>
+          <form id="terminal-form" class="terminal-form">
+            <label class="sr-only" for="terminal-input">输入终端命令</label>
+            <span class="terminal-prompt" aria-hidden="true">visitor@yubai:~$</span>
+            <input
+              id="terminal-input"
+              class="terminal-input"
+              name="command"
+              type="text"
+              maxlength="80"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              enterkeyhint="send"
+              aria-describedby="terminal-hint"
+            >
+            <button class="terminal-submit" type="submit" aria-label="执行命令">↵</button>
+          </form>
+          <p id="terminal-hint" class="sr-only">按回车执行命令，使用上下方向键浏览历史，按 Control 或 Command 加 L 清屏。</p>
+        </div>
+      </div>
+    </section>
 
     <section class="section currently" aria-labelledby="currently-title">
       <div class="section-heading">
