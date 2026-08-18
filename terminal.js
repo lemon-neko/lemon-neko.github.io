@@ -148,6 +148,7 @@
       case "neko":
         appendLine(" /\\_/\\\n( o.o )\n > ^ <", "terminal-ascii");
         appendLine("你发现了一只藏在终端里的猫。", "terminal-muted");
+        window.dispatchEvent(new CustomEvent("yubai:neko-found"));
         break;
       case "sudo":
         appendLine("权限不足：这里没有 root，只有好奇心。", "terminal-error");
