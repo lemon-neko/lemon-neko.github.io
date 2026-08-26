@@ -88,16 +88,7 @@
     github.rel = "noopener noreferrer";
     github.textContent = "GitHub @lemon-neko";
 
-    var wechat = document.createElement("a");
-    wechat.className = "terminal-link";
-    wechat.href = "https://mp.weixin.qq.com/mp/homepage?__biz=Mzk3NTE1MzcyMQ==&hid=1&sn=5d2a68f7a897d111bc8aaad09b539ef6";
-    wechat.target = "_blank";
-    wechat.rel = "noopener noreferrer";
-    wechat.textContent = "微信公众号：羽白的幻想栈";
-
     line.appendChild(github);
-    line.appendChild(document.createTextNode("  ·  "));
-    line.appendChild(wechat);
     output.appendChild(line);
     trimOutput();
     scrollToLatest();
