@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">羽白个人标识</title>
+  <desc id="desc">由白色羽翼与字母 Y 的轮廓融合而成的个人标识</desc>
+  <defs>
+    <radialGradient id="surface" cx="38%" cy="28%" r="88%">
+      <stop offset="0" stop-color="#17223a"/>
+      <stop offset="0.52" stop-color="#0c1426"/>
+      <stop offset="1" stop-color="#070b14"/>
+    </radialGradient>
+    <linearGradient id="ivory" x1="28" y1="32" x2="94" y2="104" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fffdf4"/>
+      <stop offset="1" stop-color="#e9e0cf"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="66" y1="60" x2="96" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d89135"/>
+      <stop offset="0.55" stop-color="#f1bd67"/>
+      <stop offset="1" stop-color="#ffe0a0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="128" height="128" rx="28" fill="url(#surface)"/>
+  <rect x="0.75" y="0.75" width="126.5" height="126.5" rx="27.25" fill="none" stroke="#d9ad68" stroke-opacity="0.2" stroke-width="1.5"/>
+
+  <!-- A feather silhouette whose negative space resolves into a subtle Y. -->
+  <path fill="url(#ivory)" d="M20 39c15.5-2.2 29.5 4 40.2 18.5 5 6.8 8.7 14.2 11.1 22.4 2.6-12.3 1.9-21.8 7.9-32.1C85 37.9 94.8 28.5 108 19c.6 17.7-5.6 32.2-19 43.6 8.5-3.1 15.9-8 22.1-14.6-2.5 16.4-13.5 29.8-30.7 38.8 8-1.9 14.7-5.2 20.3-9.8-5.5 13.7-15.8 23-30.4 28.3-2.4 6.3-6.2 11.2-11.4 14.7 4.7-22.2 4.4-39.4-.9-51.6C51.6 53.6 39 43.8 20 39Z"/>
+
+  <path fill="url(#surface)" d="M71.1 79.8c9.4-12 18.8-21.2 30.5-29.5-8.5 10.9-18 20.4-30.5 29.5ZM69.1 100.9c9.1-10.7 17.6-18 27.5-23.7-7.5 9.5-15.9 17-27.5 23.7Z"/>
+  <path fill="url(#amber)" d="M72.5 61.9c4.4-12.4 12.7-22.3 25-30.2-6.9 11.9-14.7 21.9-25 30.2Z"/>
+</svg>
