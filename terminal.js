@@ -27,8 +27,9 @@
     "可用命令：",
     "  help          查看命令列表",
     "  about         认识羽白",
-    "  now           查看正在做的事",
-    "  links         打开其他入口",
+    "  now           查看当前作品与关注方向",
+    "  projects      浏览项目、获奖信息与演示",
+    "  links         打开 GitHub 与项目入口",
     "  fortune       获取一条随机短句",
     "  echo <text>   回显一段文字",
     "  clear         清空终端"
@@ -77,21 +78,66 @@
     trimOutput();
   }
 
-  function appendLinks() {
+  function getProjects() {
+    return Array.prototype.map.call(
+      document.querySelectorAll("#projects .project-card"),
+      function (card) {
+        var title = card.querySelector("h3");
+        var description = card.querySelector(".project-description");
+        var award = card.querySelector(".project-award");
+        var link = card.querySelector(".project-link");
+        return {
+          title: title ? title.textContent.trim() : "",
+          description: description ? description.textContent.trim() : "",
+          award: award ? award.textContent.trim() : "",
+          linkLabel: link ? link.firstChild.textContent.trim() : "",
+          href: link ? link.getAttribute("href") : ""
+        };
+      }
+    ).filter(function (project) {
+      return project.title && project.href;
+    });
+  }
+
+  function appendLink(label, href) {
     var line = document.createElement("p");
     line.className = "terminal-line terminal-entry";
 
-    var github = document.createElement("a");
-    github.className = "terminal-link";
-    github.href = "https://github.com/lemon-neko";
-    github.target = "_blank";
-    github.rel = "noopener noreferrer";
-    github.textContent = "GitHub @lemon-neko";
+    var link = document.createElement("a");
+    link.className = "terminal-link";
+    link.href = href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = label + " ↗";
+    link.setAttribute("aria-label", label + "（在新标签页打开）");
 
-    line.appendChild(github);
+    line.appendChild(link);
     output.appendChild(line);
     trimOutput();
     scrollToLatest();
+  }
+
+  function appendProjects() {
+    var projects = getProjects();
+    if (!projects.length) {
+      appendLine("项目展示正在更新。", "terminal-muted");
+      return;
+    }
+
+    appendLine("项目展示：");
+    projects.forEach(function (project, index) {
+      appendLine((index + 1) + ". " + project.title);
+      if (project.award) appendLine(project.award, "terminal-award");
+      if (project.description) appendLine(project.description, "terminal-muted");
+      appendLink(project.linkLabel + " — " + project.title, project.href);
+    });
+  }
+
+  function appendLinks() {
+    appendLink("GitHub @lemon-neko", "https://github.com/lemon-neko");
+    getProjects().forEach(function (project) {
+      appendLink(project.title, project.href);
+    });
   }
 
   function runCommand(rawCommand) {
@@ -113,11 +159,18 @@
         appendLine("构建 AI 系统，也思考系统背后技术与人的关系。", "terminal-muted");
         break;
       case "now":
+        appendLine("当前作品：");
+        getProjects().forEach(function (project) {
+          appendLine("  " + project.title + (project.award ? " — " + project.award : ""));
+        });
         appendLines([
-          "🚀 Building — AI applications",
           "🧪 Exploring — LLM · Agent · Human-AI Interaction",
           "✍️ Creating — Technology, people and the future"
         ]);
+        appendLine("输入 projects 查看项目介绍与体验入口。", "terminal-muted");
+        break;
+      case "projects":
+        appendProjects();
         break;
       case "links":
         appendLinks();

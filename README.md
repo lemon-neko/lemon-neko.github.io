@@ -39,7 +39,7 @@
 
 ## Playground 命令
 
-终端支持 `help`、`about`、`now`、`links`、`fortune`、`echo <text>` 和 `clear`。使用上下方向键可浏览命令历史，按 `Ctrl/⌘ + L` 可快速清屏。隐藏命令 `neko` 会唤醒一只 ASCII 小猫，并触发一次短暂的色差彩蛋。
+终端支持 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo <text>` 和 `clear`。`projects` 展示项目介绍、获奖信息与体验入口；`now` 列出当前作品与关注方向；`links` 提供 GitHub 和全部项目入口。项目内容直接读取页面卡片，新增或修改卡片后会自动同步到终端。使用上下方向键可浏览命令历史，按 `Ctrl/⌘ + L` 可快速清屏。隐藏命令 `neko` 会唤醒一只 ASCII 小猫，并触发一次短暂的色差彩蛋。
 
 ## Cinematic Lite
 
