@@ -24,12 +24,26 @@ async function capture(page,name,{section,...options}={}){
   await surface.screenshot({path:path.join(shots,name+'.png'),...options});
 }
 const ids=['origin','intelligence','ventures','observatory','playground'];
+const intros=[
+  '把零件拼起来，解决一个又一个问题。',
+  '学着和 AI 一起，把事情做得更好。',
+  '想做的事情，就试着把它做出来。',
+  '认真感受生活里的每一个瞬间。',
+  '从生活里找灵感，再把它们变成有趣的东西。'
+];
 const sections=['home','worlds','projects','writing','now','about','playground','connect'];
+async function checkIntro(page,id){
+  const copy=intros[ids.indexOf(id)];
+  assert.equal(await page.locator('#preview-intro').textContent(),copy);
+  assert.equal(await page.locator('#intro-'+id).textContent(),copy);
+  assert.equal(await page.locator('.world-links [data-world='+id+']').getAttribute('aria-describedby'),'intro-'+id);
+}
 async function checkFocus(page,id){
   assert.equal(new URL(page.url()).hash,'#focus-'+id);
   assert.equal(await page.locator('#universe').getAttribute('data-mode'),'focus');
   assert.equal(await page.locator('#view-story').getAttribute('href'),'#world-'+id);
   assert.ok(await page.locator('#view-story').isVisible());
+  await checkIntro(page,id);
 }
 async function checkSelection(page,id){
   assert.equal(new URL(page.url()).hash,'#world-'+id);
@@ -58,12 +72,16 @@ async function checkSelection(page,id){
     const desktop=await checkedPage({viewport:{width:1440,height:980},reducedMotion:'reduce'});
     await desktop.goto(url);await desktop.locator('#sky.is-rendered').waitFor();
     assert.deepEqual(await desktop.locator('main > [id]').evaluateAll(nodes=>nodes.map(el=>el.id)),sections);
+    assert.equal(await desktop.locator('.hero-principle').textContent(),'Enough abstraction makes it concrete.');
+    assert.equal(await desktop.locator('.world-directory [data-world=ventures] .world-directory-name').textContent(),'Life');
+    assert.deepEqual(await desktop.locator('.world-links [data-world=ventures] :is(strong,small)').allTextContents(),['Life','人生']);
     await capture(desktop,'1440x980');
     const canvas=desktop.locator('#star-map'), box=await canvas.boundingBox();
     const position={x:Math.round(box.width*.21),y:Math.round(box.height*.24)};
     await canvas.hover({position});
     await desktop.locator('.world-links [data-world=origin].is-hot').waitFor();
     assert.equal(await desktop.locator('#preview-name').textContent(),'Origin');
+    await checkIntro(desktop,'origin');
     assert.equal(new URL(desktop.url()).hash,'');
     await desktop.locator('.hero-copy h1').hover();
     assert.equal(await desktop.locator('#preview-name').textContent(),'五个世界，一座宇宙。');
@@ -83,9 +101,12 @@ async function checkSelection(page,id){
       const label=desktop.locator('.world-links [data-world='+id+']');
       await label.focus();
       assert.equal(await desktop.locator('#preview-name').textContent(),await label.locator('strong').textContent());
+      await checkIntro(desktop,id);
       await label.press('Enter');await checkFocus(desktop,id);
       assert.ok(await desktop.locator('#view-story').evaluate(el=>el===document.activeElement));
       await desktop.locator('#view-story').press('Enter');await checkSelection(desktop,id);
+      if(shots)await desktop.locator('#world-'+id+' h3').blur();
+      await capture(desktop,'world-'+id,{section:'#worlds'});
       await desktop.locator('[data-close-world]').click();
       assert.equal(await desktop.locator('#universe').getAttribute('data-mode'),'overview');
     }
@@ -93,6 +114,10 @@ async function checkSelection(page,id){
     await desktop.locator('#projects').evaluate(el=>el.scrollIntoView({behavior:'instant'}));
     await checkFocus(desktop,'origin');
     assert.ok(await desktop.locator('#world-playground').isVisible());
+    assert.equal(await desktop.locator('#projects .project-card').count(),3);
+    assert.deepEqual(await desktop.locator('.currently-list strong').allTextContents(),['Building','Exploring','Creating','Life']);
+    assert.equal(await desktop.locator('.notes-in-progress li').count(),4);
+    assert.equal(await desktop.locator('.notes-in-progress a').count(),0);
     await capture(desktop,'selected-work',{section:'#projects'});
     await capture(desktop,'field-notes',{section:'#writing'});
     await capture(desktop,'about',{section:'#about'});
@@ -102,8 +127,8 @@ async function checkSelection(page,id){
     await checkSelection(desktop,'ventures');
     await desktop.goBack();await checkSelection(desktop,'intelligence');
     await desktop.goForward();await checkSelection(desktop,'ventures');
-    await desktop.locator('#about summary').filter({hasText:'Agent Engineering'}).click();
-    assert.ok(await desktop.locator('#about details[open]').filter({hasText:'Agent Engineering'}).count());
+    await desktop.locator('#about summary').filter({hasText:/03 Agent$/}).click();
+    assert.ok(await desktop.locator('#about details[open]').filter({hasText:'怎么让 AI 从回答问题'}).count());
     await desktop.locator('#writing').evaluate(el=>el.scrollIntoView({behavior:'instant'}));
     await desktop.waitForFunction(()=>document.querySelector('.nav-links [aria-current]')?.hash==='#writing');
 
@@ -123,10 +148,24 @@ async function checkSelection(page,id){
     await command('fortune');assert.ok(await output.locator('.terminal-success').count());
     await command('links');assert.ok(await output.locator('a[href="https://carelink.pw/"]').count());
     await command('visit playground');await checkSelection(desktop,'playground');
+    await command('visit ventures');await checkSelection(desktop,'ventures');
+    await command('visit life');await checkSelection(desktop,'ventures');
     await command('orbit');assert.equal(await desktop.locator('#universe').getAttribute('data-mode'),'auto');
     await command('universe');assert.equal(await desktop.locator('#universe').getAttribute('data-mode'),'overview');
     await command('neko');assert.ok(await output.locator('.terminal-ascii').count());
     await input.press('ArrowUp');assert.equal(await input.inputValue(),'neko');
+    for(const [id,name] of [['claude','Claude'],['gpt','GPT'],['deepseek','DeepSeek']]){
+      await command(id);
+      const reply=output.locator('.terminal-roommate').last();
+      assert.ok((await reply.textContent()).startsWith(name));
+      assert.equal(await reply.locator('use').getAttribute('href'),'#roommate-'+id);
+      assert.ok(!(await desktop.locator('#roommate-sighting').isVisible()),'offscreen sighting was shown early');
+      await reply.locator('a').click();
+      const sighting=desktop.locator('#roommate-sighting[data-roommate='+id+']');
+      await sighting.waitFor();
+      assert.equal(await sighting.locator('use').getAttribute('href'),'#roommate-'+id);
+    }
+    await capture(desktop,'deepseek-sighting');
     await command('clear');assert.equal(await output.textContent(),'');
     assert.deepEqual(errors,[]);
     console.log('1440px: raycast hover/click, all worlds, keyboard, hash/history, scroll navigation, timeline, console passed');
@@ -138,6 +177,7 @@ async function checkSelection(page,id){
       if(i)await desktop.clock.fastForward(4600);
       assert.equal(await desktop.locator('#view-story').getAttribute('href'),'#world-'+id);
       assert.equal(await desktop.locator('#preview-index').textContent(),'0'+(i+1)+' / 05');
+      await checkIntro(desktop,id);
       assert.equal(await desktop.evaluate(()=>scrollY),0);
     }
     await desktop.locator('#tour-toggle').click();

@@ -19,25 +19,22 @@
   let renderer, active='', story=defaultId, hovered='', shown, tourIndex=-1, tourTimer=0;
   let navFrame=0, hashFrame=0, lastFocus, paused=false, tourHasEntered=false;
 
-  document.querySelectorAll('[data-project-link],[data-project-copy]').forEach(element=>{
-    const card=document.getElementById(element.dataset.projectLink || element.dataset.projectCopy)?.closest('.project-card');
-    if(!card)return;
-    if(element.dataset.projectCopy){
-      element.textContent=card.querySelector('.project-description').textContent;
-      const award=card.querySelector('.project-award');
-      if(award){
-        const line=document.createElement('p');line.className='world-award';line.textContent=award.textContent;
-        element.after(line);
-      }
-    }else{
-      const link=card.querySelector('.project-link');
-      element.href=link.href;element.target=link.target;element.rel=link.rel;
-    }
+  document.querySelectorAll('[data-project-link]').forEach(element=>{
+    const link=document.getElementById(element.dataset.projectLink)?.closest('.project-card')?.querySelector('.project-link');
+    if(link){element.href=link.href;element.target=link.target;element.rel=link.rel;}
   });
-  const intros=new Map([...notes].map(([id,note])=>[id,note.querySelector('.world-copy p').textContent]));
-  const headings=new Map([...notes].map(([id,note])=>{
-    const heading=note.querySelector('h3');heading.tabIndex=-1;return [id,heading];
+  const worldCopy=new Map([...notes].map(([id,note])=>{
+    const heading=note.querySelector('h3'), intro=note.querySelector('.world-intro');
+    heading.tabIndex=-1;
+    return [id,{heading,intro,name:note.dataset.name,alt:heading.textContent}];
   }));
+  selectors.forEach(link=>{
+    const copy=worldCopy.get(link.dataset.world);
+    link.setAttribute('aria-describedby',copy.intro.id);
+    link.querySelector('strong,.world-directory-name').textContent=copy.name;
+    const secondary=link.querySelector('small');
+    if(secondary)secondary.textContent=copy.alt;
+  });
 
   function update(){
     const selected=tourIndex<0?active:worldIds[tourIndex];
@@ -54,9 +51,10 @@
       shown=id;
       previewIndex.hidden=!id;
       previewIndex.textContent=id?labels.get(id).querySelector('span').textContent+' / '+String(worldIds.length).padStart(2,'0'):'';
-      previewName.textContent=id?notes.get(id).dataset.name:'五个世界，一座宇宙。';
-      previewNameZh.textContent=id?headings.get(id).textContent:'';
-      previewIntro.textContent=id?intros.get(id):'悬停预览，点击星球聚焦。也可以使用下方的星球目录。';
+      const copy=worldCopy.get(id);
+      previewName.textContent=copy?.name||'五个世界，一座宇宙。';
+      previewNameZh.textContent=copy?.alt||'';
+      previewIntro.textContent=copy?.intro.textContent||'悬停预览，点击星球聚焦。也可以使用下方的星球目录。';
       preview.style.setProperty('--preview-color',id?labels.get(id).style.getPropertyValue('--world'):'var(--accent-2)');
       if(!preference.matches)previewCopy.animate([{opacity:.35,transform:'translateY(4px)'},{opacity:1,transform:'none'}],{duration:240,easing:'ease-out'});
     }
@@ -108,7 +106,7 @@
     if(origin?.hasAttribute('data-open-case'))notes.get(id).querySelector('.world-case').open=true;
     if(!origin?.closest('.world-directory')){
       document.querySelector('#worlds').scrollIntoView({block:'start'});
-      headings.get(id).focus({preventScroll:true});
+      worldCopy.get(id).heading.focus({preventScroll:true});
     }
     return true;
   }
@@ -184,7 +182,25 @@
   },{threshold:.1});
   document.querySelectorAll('.section-heading,.project-card,.essay-feature').forEach(el=>revealObserver.observe(el));
   document.querySelectorAll('.project-card').forEach((el,i)=>el.style.setProperty('--reveal-delay',i*65+'ms'));
-  const tourObserver=new IntersectionObserver(()=>{
+  const sighting=document.querySelector('#roommate-sighting');
+  let sightingTimer=0, pendingSighting=false;
+  function showRoommate(){
+    pendingSighting=false;
+    sighting.hidden=false;
+    sightingTimer=setTimeout(()=>{sighting.hidden=true;},5200);
+  }
+  window.addEventListener('yubai:roommate',({detail:{id,name}})=>{
+    clearTimeout(sightingTimer);
+    sighting.hidden=true;
+    sighting.dataset.roommate=id;
+    sighting.querySelector('use').setAttribute('href','#roommate-'+id);
+    sighting.querySelector('span').textContent=name;
+    const box=sky.getBoundingClientRect();
+    if(box.bottom>0&&box.top<innerHeight)showRoommate();
+    else pendingSighting=true;
+  },options);
+  const tourObserver=new IntersectionObserver(([entry])=>{
+    if(pendingSighting&&entry.isIntersecting)showRoommate();
     if(tourIndex<0)return;
     const box=sky.getBoundingClientRect();
     if(box.bottom>0&&box.top<innerHeight)tourHasEntered=true;
@@ -203,6 +219,7 @@
   },options);
   window.addEventListener('pagehide',event=>{
     cancelAnimationFrame(hashFrame);stopTour();
+    clearTimeout(sightingTimer);sighting.hidden=true;pendingSighting=false;
     if(event.persisted)return;
     clearTimeout(nekoTimer);cancelAnimationFrame(navFrame);
     revealObserver.disconnect();tourObserver.disconnect();controller.abort();

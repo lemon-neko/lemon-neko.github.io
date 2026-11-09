@@ -23,6 +23,16 @@
     "保持好奇，也给偶然留一点空间。"
   ];
 
+  var roommates = {
+    claude: { name: "Claude", replies: ["我在观察站读书。书签夹好了，刚才那个问题可以慢慢想。"] },
+    gpt: { name: "GPT", replies: [
+      "做个只会给雨声分类的小工具：窗户、树叶、凌晨三点。",
+      "给每一颗星球配一段开场白，先让最害羞的那颗讲。",
+      "写个待办清单，把「今天发呆十分钟」放在第一项。"
+    ] },
+    deepseek: { name: "DeepSeek", replies: ["咕噜。刚从星球背面游过来，有没有看到我丢的气泡？"] }
+  };
+
   var helpLines = [
     "可用命令：",
     "  help          查看命令列表",
@@ -35,7 +45,8 @@
     "  links         打开 GitHub 与项目入口",
     "  fortune       获取一条随机短句",
     "  echo <text>   回显一段文字",
-    "  clear         清空终端"
+    "  clear         清空终端",
+    "  claude / gpt / deepseek  叫一声 AI 室友"
   ];
 
   function trimOutput() {
@@ -86,12 +97,12 @@
       document.querySelectorAll("#projects .project-card"),
       function (card) {
         var title = card.querySelector("h3");
-        var description = card.querySelector(".project-description");
+        var descriptions = Array.from(card.querySelectorAll(".project-description"), function (p) { return p.textContent.trim(); });
         var award = card.querySelector(".project-award");
         var link = card.querySelector(".project-link");
         return {
           title: title ? title.textContent.trim() : "",
-          description: description ? description.textContent.trim() : "",
+          description: descriptions.join("\n"),
           award: award ? award.textContent.trim() : "",
           linkLabel: link ? link.firstChild.textContent.trim() : "",
           href: link ? link.getAttribute("href") : ""
@@ -143,6 +154,22 @@
     });
   }
 
+  function meetRoommate(id) {
+    var roommate = roommates[id];
+    var reply = roommate.replies[Math.floor(Math.random() * roommate.replies.length)];
+    var line = appendLine(roommate.name + " · " + reply, "terminal-roommate");
+    var avatar = document.querySelector("#roommate-sighting svg").cloneNode(true);
+    avatar.querySelector("use").setAttribute("href", "#roommate-" + id);
+    avatar.setAttribute("aria-hidden", "true");
+    line.prepend(avatar);
+    var link = document.createElement("a");
+    link.className = "terminal-link";
+    link.href = "#home";
+    link.textContent = "去星图看看 ↑";
+    line.append(" ", link);
+    window.dispatchEvent(new CustomEvent("yubai:roommate", { detail: { id: id, name: roommate.name } }));
+  }
+
   function runCommand(rawCommand) {
     var command = rawCommand.trim();
     if (!command) return;
@@ -159,7 +186,7 @@
         break;
       case "about":
         appendLine("羽白 — AI Engineer · Builder · Observer");
-        appendLine("构建 AI 系统，也思考系统背后技术与人的关系。", "terminal-muted");
+        appendLine(document.querySelector(".hero-copy .lead").innerText, "terminal-muted");
         break;
       case "now":
         appendLine("当前作品：");
@@ -167,7 +194,7 @@
           appendLine("  " + project.title + (project.award ? " — " + project.award : ""));
         });
         document.querySelectorAll(".currently-list li").forEach(function (item) {
-          appendLine(item.querySelector("strong").textContent + " — " + item.querySelector("span").textContent, "terminal-muted");
+          appendLine(item.querySelector("strong").textContent + " — " + item.querySelector("p").innerText, "terminal-muted");
         });
         appendLine("输入 projects 查看项目介绍与体验入口。", "terminal-muted");
         break;
@@ -176,7 +203,7 @@
         window.yubaiUniverse?.overview({ orbit: name === "orbit" });
         break;
       case "visit":
-        if (!window.yubaiUniverse?.visit(argument.toLowerCase())) {
+        if (!window.yubaiUniverse?.visit(argument.toLowerCase() === "life" || argument === "人生" ? "ventures" : argument.toLowerCase())) {
           appendLine("未知星球。可用：origin、intelligence、ventures、observatory、playground。", "terminal-error");
         }
         break;
@@ -204,6 +231,11 @@
         appendLine(" /\\_/\\\n( o.o )\n > ^ <", "terminal-ascii");
         appendLine("你发现了一只藏在终端里的猫。", "terminal-muted");
         window.dispatchEvent(new CustomEvent("yubai:neko-found"));
+        break;
+      case "claude":
+      case "gpt":
+      case "deepseek":
+        meetRoommate(name);
         break;
       case "sudo":
         appendLine("权限不足：这里没有 root，只有好奇心。", "terminal-error");
