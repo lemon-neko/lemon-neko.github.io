@@ -1,4 +1,4 @@
-# 羽白 · Personal Universe
+# 羽白 · Personal Universe V2.1
 
 A Universe in Progress. 羽白的个人站，使用原生 HTML、CSS、JavaScript，静态托管于 GitHub Pages。
 
@@ -14,9 +14,9 @@ python3 -m http.server --bind 127.0.0.1 8080
 
 ## 内容与交互
 
-- 白羽星核与 Origin、Intelligence、Ventures、Observatory、Playground 五座微缩世界。可以直接点击模型，也可以通过 HTML 星球链接操作；Escape 或「返回宇宙」关闭详情。
-- 作品、当前坐标、观察笔记、个人理念与 GitHub 均可直接访问。观察笔记只收录已有公开创作入口。
-- 终端保留 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo`、`clear`、历史与隐藏 `neko`；新增 `universe`、`orbit`、`visit <planet>`。项目链接统一读取页面卡片。
+- 白羽星核与 Origin、Intelligence、Ventures、Observatory、Playground 五座微缩世界。可以直接点击模型，也可以通过 HTML 星球链接操作；点击后进入同一个 Worlds 详情区，支持 `#world-ventures` 等直达链接和浏览器历史；Escape 或「返回星图」回到首屏。自动探索默认关闭，由访客开启，按五颗星球的顺序导览。
+- 作品、当前坐标、观察笔记、个人理念与 GitHub 均可直接访问。纵向顺序为 Hero → Worlds → Selected Work → Field Notes → Now → About → Space Console → Connect。Field Notes 收录有感公开目录中的编辑手记（可在本页展开全文）与播客工作台的公开虚构样例。未添加未证实的发布日期、工作经历或联系渠道。
+- 终端保留 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo`、`clear`、历史与隐藏 `neko`；`universe` 返回全景，`orbit` 开启自动探索，`visit <planet>` 聚焦指定星球。项目链接统一读取页面卡片。
 - 无 WebGL、节省流量、模块加载失败或直接打开本地文件时显示静态星图；HTML 入口仍然可用。减少动态效果时保留可点击的静止 3D 场景。场景离开视口或切到后台后暂停渲染。
 
 ## 文件与资源
@@ -31,7 +31,15 @@ python3 -m http.server --bind 127.0.0.1 8080
 
 ## 验证
 
-Node.js 22 以上可运行 `node --test tests/universe.test.mjs`，检查五个模型、HTML 入口和静态资源路径。
+Node.js 22 以上可运行 `node --test tests/universe.test.mjs`，检查五个模型、镜头曲线、HTML 入口和静态资源路径。
+
+浏览器回归脚本为 `tests/browser-smoke.cjs`，可用已有 Playwright 安装运行，不是站点运行依赖：
+
+```sh
+PLAYWRIGHT_MODULE=/path/to/node_modules/playwright CHROME_CHANNEL=chrome SCREENSHOTS_DIR=/tmp/yubai-v21 node tests/browser-smoke.cjs
+```
+
+不指定 `CHROME_CHANNEL` 时使用 Playwright 安装的 Chromium。脚本用临时本机端口模拟 Pages 子路径，并覆盖 1440、1280、768、390、375px、射线交互、历史、终端、自动探索及 WebGL 回退。
 
 ## GitHub Pages
 

@@ -17,13 +17,13 @@ function makeGlow() {
   const texture=new T.CanvasTexture(art);
   return {texture, sprite(group,x,y,z,size,color,opacity){
     const light=new T.Sprite(new T.SpriteMaterial({map:texture,color,transparent:true,opacity,blending:T.AdditiveBlending,depthWrite:false}));
-    light.position.set(x,y,z);light.scale.setScalar(size);group.add(light);
+    light.position.set(x,y,z);light.scale.setScalar(size);group.add(light);return light;
   }};
 }
 
 function makeCore(scene, glow) {
   const core=new T.Group();scene.add(core);
-  glow.sprite(core,0,.07,-.9,3.9,0x7495ff,.65);
+  const halo=glow.sprite(core,0,.07,-.9,3.9,0x7495ff,.65);
   const bubble=new T.Mesh(new T.SphereGeometry(1.09,48,32),new T.ShaderMaterial({
     transparent:true,depthWrite:false,
     vertexShader:'varying vec3 vN; varying vec3 vP; void main(){vec4 p=modelViewMatrix*vec4(position,1.);vP=p.xyz;vN=normalize(normalMatrix*normal);gl_Position=projectionMatrix*p;}',
@@ -66,10 +66,15 @@ function makeCore(scene, glow) {
   ellipse(core,1.95,.83,-.284,.075,0x777de3,.48);
   ellipse(core,1.78,.74,-.20,.075,0xf0c7ff,.51);
   for(const [x,y,z,size] of [[-.77,.73,.44,.51],[.56,1.03,.02,.47],[1.28,-.06,.64,.36],[-1.66,-.35,.21,.37],[.05,-.38,1,.53]]) glow.sprite(core,x,y,z,size,0xb0bfff,.92);
-  return feather;
+  return {core,feather,halo};
 }
 
-export function startUniverse(canvas,{onPick,onLabels,reduced,paused}) {
+export function cameraEase(t){
+  const progress=T.MathUtils.clamp(t,0,1);
+  return progress*progress*(3-2*progress);
+}
+
+export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced,paused}) {
   const sky=canvas.parentElement;
   const context=canvas.getContext('webgl2',{alpha:true,antialias:true,powerPreference:'low-power'});
   if(!context)return null;
@@ -77,12 +82,12 @@ export function startUniverse(canvas,{onPick,onLabels,reduced,paused}) {
   renderer.setClearColor(0,0);renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;
   const scene=new T.Scene(), camera=new T.OrthographicCamera(-6,6,4,-4,.1,80), glow=makeGlow();
   addLights(scene);
-  const feather=makeCore(scene,glow);
+  const {core,feather,halo}=makeCore(scene,glow);
   const system=new T.Group();scene.add(system);
   ellipse(system,5.69,3.65,-.18,.24,0x8c9cd9,.28);
   ellipse(system,5.53,3.41,-.34,.24,0x645aa6,.25);
   ellipse(system,4.95,2.75,.12,-.26,0x8079ca,.22);
-  const hits=[], models=[], routes=[];
+  const hits=[], models=[], routes=[], glows=[], palettes=[], origins=[];
   worlds.forEach(([id,position,color],i)=>{
     const model=makeWorld(i);model.position.fromArray(position);model.rotation.y=(i-2)*.12;system.add(model);models.push(model);
     const hit=new T.Mesh(new T.SphereGeometry(1.22,8,6),new T.MeshBasicMaterial());hit.position.y=.17;
@@ -94,55 +99,112 @@ export function startUniverse(canvas,{onPick,onLabels,reduced,paused}) {
     for(const j of [.33,.63,.88]){
       const p=curve.getPoint(j);glow.sprite(system,p.x,p.y,p.z,.22,color,.6);
     }
-    glow.sprite(model,0,-.1,.1,2.45,color,.23);
+    glows.push(glow.sprite(model,0,-.1,.1,2.45,color,.23));
+    origins.push(model.position.clone());
+    const owned=new Map();
+    model.traverse(item=>{
+      if(!item.material?.isMeshStandardMaterial)return;
+      if(!owned.has(item.material)){
+        const material=item.material.clone();
+        owned.set(item.material,{material,color:material.color.clone(),emissive:material.emissive.clone()});
+      }
+      item.material=owned.get(item.material).material;
+    });
+    palettes.push([...owned.values()]);
   });
   const seed=Array.from({length:500},(_,i)=>{
     const x=Math.sin(i*127.1+11)*43758.5453;return x-Math.floor(x);
   });
   const stars=[];
   for(let i=0;i<155;i++)stars.push((seed[i]-.5)*15,(seed[i+156]-.5)*11,-5+seed[i+310]*4);
-  const starGeometry=new T.BufferGeometry();starGeometry.setAttribute('position',new T.Float32BufferAttribute(stars,3));
-  scene.add(new T.Points(starGeometry,new T.PointsMaterial({color:0xb7c8ff,size:1.3,sizeAttenuation:false,transparent:true,opacity:.48,depthWrite:false})));
+  const starsAt=(points, color, size, opacity)=>{
+    const geometry=new T.BufferGeometry().setAttribute('position',new T.Float32BufferAttribute(points,3));
+    const layer=new T.Points(geometry,new T.PointsMaterial({color,size,sizeAttenuation:false,transparent:true,opacity,depthWrite:false}));
+    scene.add(layer);return layer;
+  };
+  const farStars=starsAt(stars.slice(0,330),0xaab9ee,1.15,.38);
+  const nearStars=starsAt(stars.slice(330),0xd3d9ff,1.7,.56);
   const controller=new AbortController(), eventOptions={signal:controller.signal};
-  const pointer=new T.Vector2(), ray=new T.Raycaster(), view=new T.Vector3(), focal=new T.Vector3(), orbitTarget=new T.Vector3(), label=new T.Vector3();
-  let selected='', hover='', orbit=false, frame=0, visible=true, destroyed=false, last=0, zoom=1, motionTime=0, width=1,height=1;
-  const baseHeight=4.12;
+  const pointer=new T.Vector2(), drift=new T.Vector2(), ray=new T.Raycaster(), view=new T.Vector3();
+  const focal=new T.Vector3(), from=new T.Vector3(), target=new T.Vector3(), label=new T.Vector3();
+  const fine=matchMedia('(pointer:fine)'), small=matchMedia('(max-width:900px)');
+  let selected='', hover='', frame=0, visible=true, destroyed=false, last=0, zoom=1, motionTime=0, width=1,height=1;
+  let elapsed=.86, fromZoom=1, targetZoom=1, pulseUntil=0, labelTime=1;
+  const lastLabels=new Map(), dim=worlds.map(()=>1), baseHeight=4.12;
   function canAnimate(){return !paused() && !reduced();}
+  function setHover(id){
+    if(id!==hover){hover=id;onHover?.(id);schedule();}
+  }
+  function select(id){
+    if(id===selected)return;
+    selected=id;
+    from.copy(focal);fromZoom=zoom;elapsed=0;
+    const world=worlds.find(item=>item[0]===id);
+    target.set(0,0,0);
+    if(world)target.fromArray(world[1]).multiplyScalar(.16);
+    targetZoom=world?1.13:1;
+    schedule();
+  }
   function applyCamera(dt){
-    const active=worlds.findIndex(world=>world[0]===selected);
-    orbitTarget.set(0,0,0);
-    if(active>=0)orbitTarget.fromArray(worlds[active][1]).multiplyScalar(.13);
-    const lerp=canAnimate()?1-Math.exp(-dt*5):1;
-    focal.lerp(orbitTarget,lerp);
-    zoom=T.MathUtils.lerp(zoom,active>=0?1.10:orbit?1.075:1,lerp);
-    const parallax=canAnimate() && matchMedia('(pointer:fine)').matches;
-    camera.position.set(focal.x+(parallax?pointer.x*.49:0),focal.y+8+(parallax?pointer.y*.33:0),focal.z+18);
+    const moving=canAnimate();
+    if(moving)motionTime+=dt;
+    elapsed=moving?Math.min(.86,elapsed+dt):.86;
+    const amount=cameraEase(elapsed/.86), smooth=moving?1-Math.exp(-dt*8):1;
+    focal.lerpVectors(from,target,amount);
+    zoom=T.MathUtils.lerp(fromZoom,targetZoom,amount);
+    if(moving&&fine.matches&&!small.matches)drift.lerp(pointer,smooth);else drift.set(0,0);
+    camera.position.set(focal.x+drift.x*.48,focal.y+8+drift.y*.31,focal.z+18);
     camera.lookAt(focal);
     camera.zoom=zoom;camera.updateProjectionMatrix();
+    farStars.position.set(drift.x*.06,drift.y*.04,0);
+    nearStars.position.set(drift.x*.24,drift.y*.17,0);
+    nearStars.material.opacity=.51+.055*Math.sin(motionTime*.63);
     models.forEach((model,i)=>{
-      const hot=worlds[i][0]===hover||worlds[i][0]===selected;
-      model.scale.lerp(view.setScalar(hot?1.10:1),lerp);
-      model.rotation.y=(i-2)*.12+(canAnimate()?.15*Math.sin(motionTime*.27+i):0);
-      routes[i].material.opacity=hot?.87:orbit?.49:.22;
+      const id=worlds[i][0], hot=id===hover||id===selected, other=(hover||selected)&&!hot;
+      model.position.y=origins[i].y+.075*Math.sin(motionTime*(.66+i*.10)+i*.67);
+      model.scale.lerp(view.setScalar(id===selected?1.07:hot?1.055:1),smooth);
+      model.rotation.y=(i-2)*.12+.16*Math.sin(motionTime*(.24+i*.035)+i);
+      routes[i].material.opacity=T.MathUtils.lerp(routes[i].material.opacity,hot?.82:other?.13:.22,smooth);
+      glows[i].material.opacity=(hot?.51:.22)+.03*Math.sin(motionTime*.72+i);
+      const factor=T.MathUtils.lerp(dim[i],other?.80:1,smooth);
+      if(Math.abs(factor-dim[i])>.001){
+        palettes[i].forEach(({material,color,emissive})=>{
+          material.color.copy(color).multiplyScalar(factor);
+          material.emissive.copy(emissive).multiplyScalar(factor);
+        });
+        dim[i]=factor;
+      }
     });
-    feather.rotation.z=.05+(canAnimate()?.065*Math.sin(motionTime*.58):0);
+    core.rotation.y=.11*Math.sin(motionTime*.38);
+    feather.rotation.z=.05+.07*Math.sin(motionTime*.58);
+    halo.material.opacity=.63+.08*Math.sin(motionTime*.63)+(pulseUntil>performance.now()?.29:0);
     renderer.render(scene,camera);
-    onLabels(worlds.map(([id,p,,,[dx,dy]])=>{
-      label.set(p[0]+dx,p[1]+dy,p[2]).project(camera);
-      return [id, T.MathUtils.clamp((label.x+1)/2*100,7,93), T.MathUtils.clamp((1-label.y)/2*100,6,91)];
-    }));
+    labelTime+=dt;
+    if(small.matches||labelTime<.033)return;
+    labelTime=0;
+    const changes=[];
+    worlds.forEach(([id,p,,,[dx,dy]],i)=>{
+      label.set(p[0]+dx,models[i].position.y+dy,p[2]).project(camera);
+      const x=Math.round(T.MathUtils.clamp((label.x+1)/2*width,44,width-44));
+      const y=Math.round(T.MathUtils.clamp((1-label.y)/2*height,24,height-34));
+      const previous=lastLabels.get(id);
+      if(previous?.[0]===x&&previous?.[1]===y)return;
+      lastLabels.set(id,[x,y]);changes.push([id,x,y]);
+    });
+    if(changes.length)onLabels(changes);
   }
   function render(time){
     frame=0;
     if(destroyed||document.hidden||!visible)return;
-    const dt=last?Math.min((time-last)/1000,.052):.016;last=time;motionTime+=dt;
+    const dt=last?Math.min((time-last)/1000,.052):.016;last=time;
     applyCamera(dt);
     if(canAnimate())schedule();
   }
   function schedule(){if(!destroyed&&!frame&&!document.hidden&&visible)frame=requestAnimationFrame(render);}
   function resize(){
     width=Math.max(sky.clientWidth,1);height=Math.max(sky.clientHeight,1);
-    const h=Math.max(baseHeight,5.98*height/width);
+    const h=Math.max(baseHeight,6.12*height/width);
+    lastLabels.clear();labelTime=1;
     camera.left=-h*width/height;camera.right=-camera.left;camera.top=h;camera.bottom=-h;
     renderer.setPixelRatio(Math.min(devicePixelRatio,width<610?1.35:1.65));renderer.setSize(width,height,false);
     schedule();
@@ -155,11 +217,11 @@ export function startUniverse(canvas,{onPick,onLabels,reduced,paused}) {
   }
   canvas.addEventListener('pointermove',event=>{
     if(event.pointerType!=='mouse')return;
-    hover=pick(event);canvas.style.cursor=hover?'pointer':'default';schedule();
+    setHover(pick(event));canvas.style.cursor=hover?'pointer':'default';schedule();
   },eventOptions);
-  canvas.addEventListener('pointerleave',()=>{pointer.set(0,0);hover='';schedule();},eventOptions);
+  canvas.addEventListener('pointerleave',()=>{pointer.set(0,0);setHover('');schedule();},eventOptions);
   canvas.addEventListener('click',event=>{const id=pick(event);if(id)onPick(id);},eventOptions);
-  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();sky.classList.remove('is-rendered');document.querySelector('#motion-toggle').hidden=true;destroy();},eventOptions);
+  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();sky.classList.remove('is-rendered');destroy();onFallback?.();},eventOptions);
   const resizeObserver=new ResizeObserver(resize);resizeObserver.observe(sky);
   const intersection=new IntersectionObserver(entries=>{
     visible=entries[0].isIntersecting;last=0;
@@ -173,5 +235,5 @@ export function startUniverse(canvas,{onPick,onLabels,reduced,paused}) {
   }
   window.addEventListener('pagehide',event=>{if(!event.persisted)destroy();},eventOptions);
   resize();applyCamera(.016);sky.classList.add('is-rendered');
-  return {select(id){selected=id;orbit=false;schedule();},orbit(){selected='';orbit=true;schedule();},hover(id){hover=id;schedule();},refresh:schedule};
+  return {select,hover:setHover,refresh:schedule,pulse(){pulseUntil=performance.now()+700;schedule();}};
 }

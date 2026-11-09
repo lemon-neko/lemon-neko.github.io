@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {Box3, Vector3} from '../public/vendor/three.module.min.js';
 import {worlds, makeWorld, disposeScene} from '../universe-models.js';
+import {cameraEase} from '../universe.js';
 
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
 const css=await readFile(new URL('../styles.css',import.meta.url),'utf8');
@@ -30,4 +31,10 @@ test('all static asset paths used by the homepage exist',async()=>{
   ];
   await Promise.all([...new Set(assets)].map(file=>access(new URL('../'+file,import.meta.url))));
   assert.ok(html.includes('href="https://carelink.pw/"'));
+});
+
+test('camera easing clamps overshoot and keeps a smooth symmetric transition',()=>{
+  assert.deepEqual([-1,0,.5,1,2].map(cameraEase),[0,0,.5,1,1]);
+  assert.ok(cameraEase(.25)<.25);
+  assert.equal(cameraEase(.25)+cameraEase(.75),1);
 });

@@ -30,7 +30,7 @@
     "  now           查看当前作品与关注方向",
     "  projects      浏览项目、获奖信息与演示",
     "  universe      返回宇宙总览",
-    "  orbit         聚焦宇宙轨道",
+    "  orbit         开启自动探索（universe 退出）",
     "  visit <planet> 进入星球（origin / intelligence / ventures / observatory / playground）",
     "  links         打开 GitHub 与项目入口",
     "  fortune       获取一条随机短句",

@@ -52,8 +52,8 @@
     <div class="nav-inner">
       <a class="nav-brand" href="#home" aria-label="羽白，返回首页"><img src="public/yubai-mark.svg" alt="" width="28" height="28">羽白 <span>YUBAI</span></a>
       <div class="nav-links">
-        <a href="#home" aria-current="location">Universe</a><a href="#projects">Work</a><a href="#playground">Lab</a>
-        <a href="#writing">Writing</a><a href="#about">About</a><a href="#connect">Connect</a>
+        <a href="#home" aria-current="location">Universe</a><a href="#worlds">Worlds</a><a href="#projects">Work</a>
+        <a href="#writing">Notes</a><a href="#now">Now</a><a href="#about">About</a><a href="#playground">Lab</a><a href="#connect">Connect</a>
       </div>
       <a class="nav-github" href="https://github.com/lemon-neko" aria-label="GitHub @lemon-neko">
         <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.64 1.22 3.28.94.1-.72.39-1.22.71-1.5-2.5-.29-5.13-1.25-5.13-5.56 0-1.23.44-2.24 1.16-3.03-.11-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.16a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.09-1.16 3.09-1.16.61 1.55.23 2.7.12 2.98.72.79 1.15 1.8 1.15 3.03 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.08v3.1c0 .3.2.65.78.54A11.25 11.25 0 0 0 12 .75Z"/></svg>
@@ -64,7 +64,6 @@
     <header class="hero universe-hero" id="home">
       <div class="hero-inner">
         <div class="hero-copy" id="hero-copy">
-          <div class="hero-index">YUBAI <span>/</span> PERSONAL UNIVERSE</div>
           <h1>羽白</h1>
           <p class="role">AI Engineer · Builder · Observer</p>
           <p class="lead">构建 AI 系统，探索技术、人类与未来之间的关系。</p>
@@ -73,7 +72,7 @@
             <a class="primary-link" id="explore-universe" href="#world-origin">Explore My Universe <span aria-hidden="true">→</span></a>
             <a class="secondary-link" href="#projects">View My Work</a>
           </div>
-          <a class="console-entry" href="#playground">Enter the space console <span aria-hidden="true">↘</span></a>
+          <a class="console-entry" href="https://github.com/lemon-neko">GitHub / @lemon-neko <span aria-hidden="true">↗</span></a>
         </div>
         <section id="universe" class="universe-map" aria-label="探索五颗主题星球">
           <div class="sky" id="sky">
@@ -87,86 +86,154 @@
             <a href="#world-observatory" data-world="observatory" style="--x:81%;--y:79%;--world:#e4adc7"><span>04</span><strong>Observatory</strong><small>观察者</small></a>
             <a href="#world-playground" data-world="playground" style="--x:16%;--y:90%;--world:#a6a7ff"><span>05</span><strong>Playground</strong><small>创造实验室</small></a>
           </nav>
-          <div class="map-caption"><span>羽白的五颗主题星球</span><button type="button" id="motion-toggle" hidden>暂停动效</button></div>
+          <div class="map-caption">
+            <p id="map-status" aria-live="polite">五个世界，一座宇宙。</p>
+            <div><button type="button" id="tour-toggle" aria-pressed="false" hidden>自动探索</button><button type="button" id="motion-toggle" aria-pressed="false" hidden>暂停动效</button></div>
+          </div>
         </section>
-        <aside class="hero-world" id="hero-world" hidden aria-label="星球详情">
-          <button type="button" data-close-world>← 返回宇宙</button>
-          <div id="hero-world-content"></div>
-        </aside>
       </div>
     </header>
 
-    <div class="content-deck">
-      <section class="section world-index" aria-labelledby="world-title">
-        <div class="section-heading"><h2 id="world-title">探索星球</h2><span>Discover My Worlds</span></div>
-        <details class="world-note" id="world-origin" data-name="Origin" open>
-          <summary>工程起点</summary><div class="world-copy"><img class="world-portrait" src="public/world-origin.webp" alt="" width="560" height="310" loading="lazy"><p>从软件工程走向 AI 基础设施。</p><p>关注 C++ / Qt、模型推理优化、推理引擎评测与自动化测试。</p><a href="#about">了解技术方向 →</a></div>
-        </details>
-        <details class="world-note" id="world-intelligence" data-name="Intelligence" open>
-          <summary>智能系统</summary><div class="world-copy"><img class="world-portrait" src="public/world-intelligence.webp" alt="" width="560" height="310" loading="lazy"><p>把 AI 能力接进真实工作流。</p><p>探索 AI Agent、RAG、工作流、工具调用与 MCP，以及 AI 全栈开发。</p><a href="#projects">浏览相关作品 →</a></div>
-        </details>
-        <details class="world-note" id="world-ventures" data-name="Ventures" open>
-          <summary>产品与创业</summary><div class="world-copy"><img class="world-portrait" src="public/world-ventures.webp" alt="" width="560" height="310" loading="lazy"><p>把工程能力变成可以体验的产品。</p><p data-project-copy="anxu-title">面向老人、家属与养老服务机构的 AI 服务协同平台，目前处于产品体验与工程验证阶段。</p><a data-project-link="anxu-title" href="#anxu-title">查看安序智护 →</a></div>
-        </details>
-        <details class="world-note" id="world-observatory" data-name="Observatory" open>
-          <summary>观察者</summary><div class="world-copy"><img class="world-portrait" src="public/world-observatory.webp" alt="" width="560" height="310" loading="lazy"><p>记录技术变化，也记录技术之外的人。</p><p>关注个人写作、播客与内容创作。</p><a href="#writing">前往观察笔记 →</a></div>
-        </details>
-        <details class="world-note" id="world-playground" data-name="Playground" open>
-          <summary>创造实验室</summary><div class="world-copy"><img class="world-portrait" src="public/world-playground.webp" alt="" width="560" height="310" loading="lazy"><p>给还在成形的想法留一片空间。</p><p><a data-project-link="podcast-title" href="#podcast-title">Podcast Workspace ↗</a><br><a data-project-link="yougan-title" href="#yougan-title">有感 · yougan ↗</a></p><a href="#playground">打开互动终端 →</a></div>
-        </details>
-      </section>
+      <section class="section world-index" id="worlds" aria-labelledby="world-title">
+        <div class="section-heading"><h2 id="world-title">五个世界</h2><span>Worlds</span></div>
+        <nav class="world-directory" aria-label="浏览星球">
+          <a href="#world-origin" data-world="origin">Origin</a>
+          <a href="#world-intelligence" data-world="intelligence">Intelligence</a>
+          <a href="#world-ventures" data-world="ventures">Ventures</a>
+          <a href="#world-observatory" data-world="observatory">Observatory</a>
+          <a href="#world-playground" data-world="playground">Playground</a>
+        </nav>
+        <article class="world-note" id="world-origin" data-name="Origin">
+          <h3>工程起点</h3>
+          <div class="world-copy">
+            <img class="world-portrait" src="public/world-origin.webp" alt="" width="560" height="310" loading="lazy">
+            <p>从软件工程走向 AI 基础设施。</p>
+            <p>软件系统工程｜系统架构 · 全栈开发<br>
+              AI Infra｜算法工程 · 模型部署 · 推理优化<br>
+              AI质量工程｜自动化评测 · Agent Engineering · 产品落地</p>
+            <a href="#about">了解技术方向 →</a>
+          </div>
+        </article>
+        <article class="world-note" id="world-intelligence" data-name="Intelligence">
+          <h3>智能系统</h3><div class="world-copy"><img class="world-portrait" src="public/world-intelligence.webp" alt="" width="560" height="310" loading="lazy"><p>把 AI 能力接进真实工作流。</p><p>探索 AI Agent、RAG、工作流、工具调用与 MCP，以及 AI 全栈开发。</p><a href="#projects">浏览相关作品 →</a></div>
+        </article>
+        <article class="world-note" id="world-ventures" data-name="Ventures">
+          <h3>产品与创业</h3><div class="world-copy"><img class="world-portrait" src="public/world-ventures.webp" alt="" width="560" height="310" loading="lazy"><p>把工程能力变成可以体验的产品。</p><p data-project-copy="anxu-title">面向老人、家属与养老服务机构的 AI 服务协同平台，目前处于产品体验与工程验证阶段。</p><a data-project-link="anxu-title" href="#anxu-title">查看安序智护 →</a></div>
+        </article>
+        <article class="world-note" id="world-observatory" data-name="Observatory">
+          <h3>观察者</h3><div class="world-copy"><img class="world-portrait" src="public/world-observatory.webp" alt="" width="560" height="310" loading="lazy"><p>记录技术变化，也记录技术之外的人。</p><p>关注个人写作、播客与内容创作。</p><a href="#writing">前往观察笔记 →</a></div>
+        </article>
+        <article class="world-note" id="world-playground" data-name="Playground">
+          <h3>创造实验室</h3><div class="world-copy"><img class="world-portrait" src="public/world-playground.webp" alt="" width="560" height="310" loading="lazy"><p>给还在成形的想法留一片空间。</p><p><a data-project-link="podcast-title" href="#podcast-title">Podcast Workspace ↗</a><br><a data-project-link="yougan-title" href="#yougan-title">有感 · yougan ↗</a></p><a href="#playground">打开互动终端 →</a></div>
+        </article>
+        <a class="back-universe" href="#home" data-close-world>返回星图 ↑</a>
+    </section>
+
     <section class="section projects" id="projects" aria-labelledby="projects-title">
       <div class="section-heading">
-        <h2 id="projects-title">项目展示</h2><span>Things I’ve Built</span>
+        <h2 id="projects-title">精选项目</h2><span>Selected Work</span>
       </div>
-      <article class="project-card" aria-labelledby="anxu-title">
-        <p class="project-award">已获得 ITEC Hackathon 全国一等奖</p>
-        <img class="project-cover carelink-cover" src="public/project-carelink.webp" alt="安序智护老人端演示首页" width="560" height="310" loading="lazy">
-        <h3 id="anxu-title">安序智护</h3>
+      <article class="project-card project-featured" aria-labelledby="anxu-title">
+        <div class="project-media"><img class="project-cover carelink-cover" src="public/project-carelink.webp" alt="安序智护老人端演示首页" width="560" height="310" loading="lazy"></div>
+        <div class="project-meta">
+        <h3 id="anxu-title">安序智护 <span>CareLink</span></h3>
+        <p class="project-award">ITEC Hackathon 全国一等奖</p>
         <p class="project-description">面向老人、家属与养老服务机构的 AI 服务协同平台。已接入 OpenHex 对话与政策提醒，服务协同仍处于演示验证阶段。</p>
+        <p class="project-tech">OpenHex · AI 服务协同</p>
         <a class="project-link" href="https://carelink.pw/" target="_blank" rel="noopener noreferrer">体验项目 <span aria-hidden="true">↗</span><span class="sr-only">（在新标签页打开安序智护）</span></a>
+        </div>
       </article>
       <article class="project-card" aria-labelledby="podcast-title">
-        <img class="project-cover" src="public/project-podcast.webp" alt="Podcast Workspace 公开演示的逐字稿与剪辑台" width="560" height="310" loading="lazy">
+        <div class="project-media"><img class="project-cover" src="public/project-podcast.webp" alt="Podcast Workspace 公开演示的逐字稿与剪辑台" width="560" height="310" loading="lazy"></div>
+        <div class="project-meta">
         <h3 id="podcast-title">Podcast Workspace</h3>
         <p class="project-description">面向播客团队的本地优先制作工作台。公开演示使用虚构样例，可以体验选题、Rundown、录制计时和非破坏性剪辑。</p>
+        <p class="project-tech">Rundown · 非破坏性剪辑</p>
         <a class="project-link" href="https://lemon-neko.github.io/podcast-workspace-pages/" target="_blank" rel="noopener noreferrer">查看公开演示 <span aria-hidden="true">↗</span><span class="sr-only">（在新标签页打开 Podcast Workspace）</span></a>
+        </div>
       </article>
       <article class="project-card" aria-labelledby="yougan-title">
-        <img class="project-cover" src="public/project-yougan.webp" alt="有感的作品《影子替广告牌上班》" width="560" height="310" loading="lazy">
+        <div class="project-media"><img class="project-cover" src="public/project-yougan.webp" alt="有感的作品《影子替广告牌上班》" width="560" height="310" loading="lazy"></div>
+        <div class="project-meta">
         <h3 id="yougan-title">有感 · yougan</h3>
         <p class="project-description">收集有趣的创意、值得停留的美和让人共鸣的瞬间。通过原创动态作品、实时视觉实验与轻互动，探索创意、审美与共情，也可以搜索和收藏喜欢的发现。</p>
+        <p class="project-tech">动态作品 · 互动策展</p>
         <a class="project-link" href="https://yougan.ronniesheppsdiv.chatgpt.site/" target="_blank" rel="noopener noreferrer">探索有感 <span aria-hidden="true">↗</span><span class="sr-only">（在新标签页打开有感）</span></a>
+        </div>
       </article>
     </section>
-    <section class="section currently" aria-labelledby="currently-title">
+
+    <section class="section writing" id="writing" aria-labelledby="writing-title">
+      <div class="section-heading"><h2 id="writing-title">观察与创作</h2><span>Field Notes</span></div>
+      <article class="essay-feature">
+        <img src="public/project-yougan.webp" alt="树影落在广告牌上" width="640" height="360" loading="lazy">
+        <div>
+          <h3 id="note-look-closer">美，有时候只是少解释一句。</h3><p class="note-kind">有感 · 审美手记</p><p>一句话已经让人看见的东西，下一句未必需要再替它总结。读到一片叶子的影子落在广告牌上，我们可以先看光、看形状，也可以只觉得这个巧合有趣。</p><details class="note-text"><summary>阅读全文</summary><p>审美不是给作品宣布一个高低。它更像辨认选择：这里为什么停顿，那里为什么留空，颜色为什么只出现一小块。把这些选择说具体，比说一句“很高级”更有帮助。</p><p>试试把你写过的一段话删掉最后一句。读一遍，再放回来。哪一版更接近你想表达的感受？没有唯一正确答案。</p><a href="https://yougan.ronniesheppsdiv.chatgpt.site/#/article/look-closer">在有感阅读原文 ↗</a></details>
+        </div>
+      </article>
+      <div class="notes-list">
+        <article><h3 id="note-strange-everyday">让熟悉的东西，短暂地陌生。</h3><p class="note-kind">有感 · 创意手记</p><p>杯子通常用来喝水。如果今天它负责收集回声呢？一个小小的用途变化，就能把熟悉的物件重新打开。</p><details class="note-text"><summary>阅读全文</summary><p>好的变体不只是换个形容词。可以换观察者、换讲述顺序、换物件承担的作用。先守住一个念头，再让形式走远一点。</p><p>在桌上找一件东西，给它一个今天不必完成的任务。你可以画出来、写一句话，或者只是带着这个问题继续过一天。</p><a href="https://yougan.ronniesheppsdiv.chatgpt.site/#/article/strange-everyday">在有感阅读原文 ↗</a></details></article>
+        <article><h3 id="note-another-position">另一种视角，不是另一种判决。</h3><p class="note-kind">有感 · 共情手记</p><p>同一件小事，站在不同位置的人可能知道不同的信息。没有告别，可能是赶时间，也可能是不知道怎么开口；我们看到的动作，不等于完整的原因。</p><details class="note-text"><summary>阅读全文</summary><p>共情可以先从保留一个空位开始。给快乐留位置，也给犹豫、不喜欢、说不清的矛盾留位置。不必马上把它们改写成成长。</p><p>试着把一次无伤大雅的误会从两个人的视角各写三句。只写他们知道的事情。看看哪些空白让你更愿意继续听。</p><a href="https://yougan.ronniesheppsdiv.chatgpt.site/#/article/another-position">在有感阅读原文 ↗</a></details></article>
+        <article><h3><a href="https://lemon-neko.github.io/podcast-workspace-pages/episodes/demo-focus/">把专注力找回来</a></h3><p class="note-kind">播客工作台 · 公开演示样例</p><p>一集关于注意力的虚构样例，可查看素材、提纲与剪辑流程。</p></article>
+      </div>
+    </section>
+
+    <section class="section currently" id="now" aria-labelledby="currently-title">
       <div class="section-heading">
         <h2 id="currently-title">当前坐标</h2><span>Current Coordinates</span>
       </div>
       <ul class="currently-list">
         <li>
-          <span class="item-mark" aria-hidden="true">01</span>
           <div>
             <strong>Building</strong>
-            <span>AI applications</span>
+            <span>构建 AI 应用，探索安序智护的养老服务协作。</span>
           </div>
         </li>
         <li>
-          <span class="item-mark" aria-hidden="true">02</span>
           <div>
             <strong>Exploring</strong>
-            <span>LLM · Agent · Human-AI Interaction</span>
+            <span>关注 LLM、Agent 与人机交互。</span>
           </div>
         </li>
         <li>
-          <span class="item-mark" aria-hidden="true">03</span>
           <div>
-            <strong>Writing &amp; Creating</strong>
-            <span>Technology, people and the future</span>
+            <strong>Creating</strong>
+            <span>在有感与播客工作台记录创意、审美和人与技术的关系。</span>
           </div>
         </li>
       </ul>
     </section>
+
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <div class="section-heading">
+        <h2 id="about-title">关于我</h2><span>Behind the Universe</span>
+      </div>
+      <div class="about-content">
+        <img class="about-portrait" src="public/pic.jpg" alt="羽白" width="80" height="80" loading="lazy">
+        <p class="about-lead">I build things, and think about the systems behind them.</p>
+        <p>通过构建系统、记录思考和实践实验，探索 AI 时代技术与人的关系。</p>
+        <p class="original-motto" lang="en">Enough abstraction makes it concrete.</p>
+        <div class="about-belief">
+          <p class="belief-statement"><span class="belief-context">当智能逐渐成为基础设施，</span><strong>创新、审美与共情，</strong><span class="belief-context">或许才是人类真正的差异化价值。</span></p>
+          <p class="belief-keywords" lang="en">Innovation · Aesthetics · Empathy</p>
+        </div>
+        <ol class="about-path" aria-label="成长轨迹">
+          <li><details open><summary>System Engineering</summary><p>从软件工程出发，关注 C++ / Qt 与自动化测试。工程实践的起点，是先把问题说清楚。</p><a href="#world-origin" data-world="origin">工程起点 →</a></details></li>
+          <li><details><summary>AI Infrastructure &amp; Evaluation</summary><p>关注模型推理优化、推理引擎评测与自动化验证。让系统表现可以复现和比较。</p><a href="#world-origin" data-world="origin">推理与评测 →</a></details></li>
+          <li>
+            <details><summary>Agent Building</summary><p>探索 Agent、RAG、工作流和工具调用，把 AI 能力接入实际应用。</p><a href="#world-intelligence" data-world="intelligence">智能系统 →</a></details>
+            <details><summary>Product Building</summary><p>通过安序智护探索 AI 与养老服务协作，也用独立作品验证创作工具和交互想法。</p><a href="#anxu-title">查看安序智护 →</a></details>
+          </li>
+        </ol>
+        <ul class="interests" aria-label="关注领域">
+          <li>Artificial Intelligence</li>
+          <li>Software Engineering</li>
+          <li>Human-AI Interaction</li>
+          <li>Future of Work</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="section playground" id="playground" aria-labelledby="playground-title">
       <div class="section-heading">
         <h2 id="playground-title">访客终端</h2><span>Space Console</span>
@@ -183,7 +250,7 @@
         </div>
         <div class="terminal-screen">
           <div id="terminal-output" class="terminal-output" role="log" aria-live="polite" aria-relevant="additions text">
-            <p class="terminal-line terminal-entry terminal-boot">Yubai Space Console · v2.0</p>
+            <p class="terminal-line terminal-entry terminal-boot">Yubai Space Console · v2.1</p>
             <p class="terminal-line terminal-entry terminal-boot">连接成功。输入 <code>help</code> 查看命令，或输入 <code>visit ventures</code> 探索星球。</p>
           </div>
           <form id="terminal-form" class="terminal-form">
@@ -207,47 +274,14 @@
         </div>
       </div>
     </section>
-    </div>
-    <section class="section writing" id="writing" aria-labelledby="writing-title">
-      <div class="section-heading"><h2 id="writing-title">观察笔记</h2><span>Notes from My Universe</span></div>
-      <p>关于技术、人和未来的记录。这里先收录已经公开的创作入口。</p>
-      <div class="writing-links">
-        <a data-project-link="yougan-title" href="#yougan-title"><strong>有感 · yougan</strong><span>动态作品、视觉实验与互动策展</span></a>
-        <a data-project-link="podcast-title" href="#podcast-title"><strong>Podcast Workspace</strong><span>播客选题、资料和制作流程</span></a>
-      </div>
-    </section>
-    <section class="section about" id="about" aria-labelledby="about-title">
-      <div class="section-heading">
-        <h2 id="about-title">关于我</h2><span>Behind the Universe</span>
-      </div>
-      <div class="about-content">
-        <img class="about-portrait" src="public/pic.jpg" alt="羽白" width="80" height="80" loading="lazy">
-        <p class="about-lead">I build things, and think about the systems behind them.</p>
-        <p>通过构建系统、记录思考和实践实验，探索 AI 时代技术与人的关系。</p>
-        <p class="original-motto" lang="en">Enough abstraction makes it concrete.</p>
-        <div class="about-belief">
-          <p class="belief-statement"><span class="belief-context">当智能逐渐成为基础设施，</span><strong>创新、审美与共情，</strong><span class="belief-context">或许才是人类真正的差异化价值。</span></p>
-          <p class="belief-keywords" lang="en">Innovation · Aesthetics · Empathy</p>
-        </div>
-        <ol class="about-path" aria-label="技术方向">
-          <li><strong>软件工程与 AI 基础设施</strong><span>C++ / Qt、模型推理优化与引擎评测</span></li>
-          <li><strong>智能系统与产品构建</strong><span>Agent、RAG、工作流与 AI 全栈开发</span></li>
-        </ol>
-        <ul class="interests" aria-label="关注领域">
-          <li>Artificial Intelligence</li>
-          <li>Software Engineering</li>
-          <li>Human-AI Interaction</li>
-          <li>Future of Work</li>
-        </ul>
-      </div>
-    </section>
+
     <section class="section connect" id="connect" aria-labelledby="connect-title">
       <div class="section-heading">
         <h2 id="connect-title">联系入口</h2><span>Open a Portal</span>
       </div>
       <div class="connect-grid">
         <a class="connect-card" href="https://github.com/lemon-neko" target="_blank" rel="noopener noreferrer">
-          <span class="connect-icon" aria-hidden="true">⌘</span>
+
           <span class="connect-copy">
             <strong>GitHub</strong>
             <small>@lemon-neko</small>
@@ -259,7 +293,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>© 羽白 · AI Engineer</p>
+    <p>© 羽白 / YUBAI</p>
   </footer>
 </body>
 </html>
