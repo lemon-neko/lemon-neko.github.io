@@ -166,10 +166,9 @@
         getProjects().forEach(function (project) {
           appendLine("  " + project.title + (project.award ? " — " + project.award : ""));
         });
-        appendLines([
-          "🧪 Exploring — LLM · Agent · Human-AI Interaction",
-          "✍️ Creating — Technology, people and the future"
-        ]);
+        document.querySelectorAll(".currently-list li").forEach(function (item) {
+          appendLine(item.querySelector("strong").textContent + " — " + item.querySelector("span").textContent, "terminal-muted");
+        });
         appendLine("输入 projects 查看项目介绍与体验入口。", "terminal-muted");
         break;
       case "universe":
@@ -216,11 +215,9 @@
     scrollToLatest();
   }
 
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
+  function submitCommand(value) {
     if (isComposing) return;
-
-    var command = input.value.trim();
+    var command = value.trim();
     if (!command) return;
 
     if (history[history.length - 1] !== command) {
@@ -230,7 +227,20 @@
     historyIndex = history.length;
     input.value = "";
     runCommand(command);
+  }
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    submitCommand(input.value);
   });
+  var shortcuts = document.querySelector(".console-commands");
+  if (shortcuts) {
+    shortcuts.hidden = false;
+    shortcuts.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-command]");
+      if (button) submitCommand(button.dataset.command);
+    });
+  }
 
   input.addEventListener("compositionstart", function () {
     isComposing = true;

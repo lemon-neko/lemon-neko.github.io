@@ -74,6 +74,10 @@ export function cameraEase(t){
   return progress*progress*(3-2*progress);
 }
 
+export function fitWorldZoom(viewWidth,viewHeight,modelWidth,modelHeight){
+  return Math.min(viewHeight*.45/modelHeight,viewWidth*.76/modelWidth);
+}
+
 export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced,paused}) {
   const sky=canvas.parentElement;
   const context=canvas.getContext('webgl2',{alpha:true,antialias:true,powerPreference:'low-power'});
@@ -87,18 +91,46 @@ export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced
   ellipse(system,5.69,3.65,-.18,.24,0x8c9cd9,.28);
   ellipse(system,5.53,3.41,-.34,.24,0x645aa6,.25);
   ellipse(system,4.95,2.75,.12,-.26,0x8079ca,.22);
-  const hits=[], models=[], routes=[], glows=[], palettes=[], origins=[];
+  const hits=[], models=[], routes=[], glows=[], palettes=[], origins=[], bounds=[], beacons=[];
+  camera.position.set(0,8,18);camera.lookAt(0,0,0);camera.updateMatrixWorld();
+  const viewRotation=new T.Matrix4().makeRotationFromQuaternion(camera.quaternion.clone().invert());
+  const center=new T.Vector3(), corner=new T.Vector3();
+  const modelView=new T.Matrix4(), instance=new T.Matrix4(), transform=new T.Matrix4();
+  const viewBox=new T.Box3();
+  function expandBounds(box,matrix){
+    for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){
+      viewBox.expandByPoint(corner.set(x,y,z).applyMatrix4(matrix));
+    }
+  }
+  function frameModel(model){
+    // Measure each mesh in camera space so the model-wide box does not overstate the silhouette.
+    model.updateMatrixWorld(true);
+    viewBox.makeEmpty();
+    model.traverse(item=>{
+      if(!item.geometry)return;
+      if(!item.geometry.boundingBox)item.geometry.computeBoundingBox();
+      const box=item.geometry.boundingBox;
+      modelView.multiplyMatrices(viewRotation,item.matrixWorld);
+      if(!item.isInstancedMesh){expandBounds(box,modelView);return;}
+      for(let i=0;i<item.count;i++){
+        item.getMatrixAt(i,instance);
+        expandBounds(box,transform.multiplyMatrices(modelView,instance));
+      }
+    });
+    const size=viewBox.getSize(new T.Vector3());
+    viewBox.getCenter(center).applyQuaternion(camera.quaternion);
+    return {center:center.clone(),width:size.x*1.1,height:size.y*1.07};
+  }
   worlds.forEach(([id,position,color],i)=>{
     const model=makeWorld(i);model.position.fromArray(position);model.rotation.y=(i-2)*.12;system.add(model);models.push(model);
+    bounds.push(frameModel(model));
     const hit=new T.Mesh(new T.SphereGeometry(1.22,8,6),new T.MeshBasicMaterial());hit.position.y=.17;
     hit.visible=false;hit.userData.id=id;model.add(hit);hits.push(hit);
     const target=new T.Vector3(...position);
     const curve=new T.CatmullRomCurve3([new T.Vector3(0,-.16,0),target.clone().multiplyScalar(.45).add(new T.Vector3(0,.34,.62)),target]);
     const route=new T.Line(new T.BufferGeometry().setFromPoints(curve.getPoints(39)),new T.LineBasicMaterial({color,transparent:true,opacity:.22}));
     system.add(route);routes.push(route);
-    for(const j of [.33,.63,.88]){
-      const p=curve.getPoint(j);glow.sprite(system,p.x,p.y,p.z,.22,color,.6);
-    }
+    beacons.push({curve,light:glow.sprite(system,0,0,0,.28,color,.48)});
     glows.push(glow.sprite(model,0,-.1,.1,2.45,color,.23));
     origins.push(model.position.clone());
     const owned=new Map();
@@ -128,7 +160,7 @@ export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced
   const pointer=new T.Vector2(), drift=new T.Vector2(), ray=new T.Raycaster(), view=new T.Vector3();
   const focal=new T.Vector3(), from=new T.Vector3(), target=new T.Vector3(), label=new T.Vector3();
   const fine=matchMedia('(pointer:fine)'), small=matchMedia('(max-width:900px)');
-  let selected='', hover='', frame=0, visible=true, destroyed=false, last=0, zoom=1, motionTime=0, width=1,height=1;
+  let selected='', selectedIndex=-1, hover='', frame=0, visible=true, destroyed=false, last=0, zoom=1, motionTime=0, width=1,height=1;
   let elapsed=.86, fromZoom=1, targetZoom=1, pulseUntil=0, labelTime=1;
   const lastLabels=new Map(), dim=worlds.map(()=>1), baseHeight=4.12;
   function canAnimate(){return !paused() && !reduced();}
@@ -139,20 +171,24 @@ export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced
     if(id===selected)return;
     selected=id;
     from.copy(focal);fromZoom=zoom;elapsed=0;
-    const world=worlds.find(item=>item[0]===id);
-    target.set(0,0,0);
-    if(world)target.fromArray(world[1]).multiplyScalar(.16);
-    targetZoom=world?1.13:1;
+    selectedIndex=worlds.findIndex(item=>item[0]===id);
+    const bound=bounds[selectedIndex];
+    if(bound)target.copy(bound.center);else target.set(0,0,0);
+    fitSelection();
     schedule();
   }
-  function applyCamera(dt){
+  function fitSelection(){
+    const bound=bounds[selectedIndex];
+    targetZoom=bound?fitWorldZoom(camera.right-camera.left,camera.top-camera.bottom,bound.width,bound.height):1;
+  }
+  function applyCamera(dt,elapsedTime=dt){
     const moving=canAnimate();
     if(moving)motionTime+=dt;
-    elapsed=moving?Math.min(.86,elapsed+dt):.86;
+    elapsed=moving?Math.min(.86,elapsed+elapsedTime):.86;
     const amount=cameraEase(elapsed/.86), smooth=moving?1-Math.exp(-dt*8):1;
     focal.lerpVectors(from,target,amount);
     zoom=T.MathUtils.lerp(fromZoom,targetZoom,amount);
-    if(moving&&fine.matches&&!small.matches)drift.lerp(pointer,smooth);else drift.set(0,0);
+    if(moving&&fine.matches&&!small.matches)drift.lerp(selected?view.set(0,0,0):pointer,smooth);else drift.set(0,0);
     camera.position.set(focal.x+drift.x*.48,focal.y+8+drift.y*.31,focal.z+18);
     camera.lookAt(focal);
     camera.zoom=zoom;camera.updateProjectionMatrix();
@@ -160,13 +196,16 @@ export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced
     nearStars.position.set(drift.x*.24,drift.y*.17,0);
     nearStars.material.opacity=.51+.055*Math.sin(motionTime*.63);
     models.forEach((model,i)=>{
-      const id=worlds[i][0], hot=id===hover||id===selected, other=(hover||selected)&&!hot;
+      const id=worlds[i][0], hot=id===(hover||selected), other=(hover||selected)&&!hot;
       model.position.y=origins[i].y+.075*Math.sin(motionTime*(.66+i*.10)+i*.67);
       model.scale.lerp(view.setScalar(id===selected?1.07:hot?1.055:1),smooth);
       model.rotation.y=(i-2)*.12+.16*Math.sin(motionTime*(.24+i*.035)+i);
       routes[i].material.opacity=T.MathUtils.lerp(routes[i].material.opacity,hot?.82:other?.13:.22,smooth);
       glows[i].material.opacity=(hot?.51:.22)+.03*Math.sin(motionTime*.72+i);
-      const factor=T.MathUtils.lerp(dim[i],other?.80:1,smooth);
+      const {curve,light}=beacons[i], phase=(.22+i*.143+motionTime*(.041+i*.006))%1;
+      curve.getPoint(phase,light.position);
+      light.material.opacity=Math.sin(phase*Math.PI)*(hot?.73:.46);
+      const factor=T.MathUtils.lerp(dim[i],other?.70:1,smooth);
       if(Math.abs(factor-dim[i])>.001){
         palettes[i].forEach(({material,color,emissive})=>{
           material.color.copy(color).multiplyScalar(factor);
@@ -180,7 +219,7 @@ export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced
     halo.material.opacity=.63+.08*Math.sin(motionTime*.63)+(pulseUntil>performance.now()?.29:0);
     renderer.render(scene,camera);
     labelTime+=dt;
-    if(small.matches||labelTime<.033)return;
+    if(selected||small.matches||labelTime<.033)return;
     labelTime=0;
     const changes=[];
     worlds.forEach(([id,p,,,[dx,dy]],i)=>{
@@ -196,8 +235,8 @@ export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced
   function render(time){
     frame=0;
     if(destroyed||document.hidden||!visible)return;
-    const dt=last?Math.min((time-last)/1000,.052):.016;last=time;
-    applyCamera(dt);
+    const dt=last?(time-last)/1000:.016;last=time;
+    applyCamera(Math.min(dt,.052),dt);
     if(canAnimate())schedule();
   }
   function schedule(){if(!destroyed&&!frame&&!document.hidden&&visible)frame=requestAnimationFrame(render);}
@@ -206,6 +245,7 @@ export function startUniverse(canvas,{onPick,onLabels,onHover,onFallback,reduced
     const h=Math.max(baseHeight,6.12*height/width);
     lastLabels.clear();labelTime=1;
     camera.left=-h*width/height;camera.right=-camera.left;camera.top=h;camera.bottom=-h;
+    fitSelection();
     renderer.setPixelRatio(Math.min(devicePixelRatio,width<610?1.35:1.65));renderer.setSize(width,height,false);
     schedule();
   }
