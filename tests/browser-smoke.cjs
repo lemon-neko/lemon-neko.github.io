@@ -21,7 +21,7 @@ async function capture(page,name,{section,...options}={}){
     return img.decode();
   })));
   const surface=section?page.locator(section):page;
-  await surface.screenshot({path:path.join(shots,name+'.png'),...options});
+  await surface.screenshot({path:path.join(shots,name+'.png'),style:section?'.site-nav{position:static!important}':'',...options});
 }
 const ids=['origin','intelligence','ventures','observatory','playground'];
 const intros=[
@@ -76,6 +76,7 @@ async function checkSelection(page,id){
     assert.equal(await desktop.locator('.world-directory [data-world=ventures] .world-directory-name').textContent(),'Life');
     assert.deepEqual(await desktop.locator('.world-links [data-world=ventures] :is(strong,small)').allTextContents(),['Life','人生']);
     await capture(desktop,'1440x980');
+    await capture(desktop,'desktop-full',{fullPage:true});
     const canvas=desktop.locator('#star-map'), box=await canvas.boundingBox();
     const position={x:Math.round(box.width*.21),y:Math.round(box.height*.24)};
     await canvas.hover({position});
@@ -105,8 +106,19 @@ async function checkSelection(page,id){
       await label.press('Enter');await checkFocus(desktop,id);
       assert.ok(await desktop.locator('#view-story').evaluate(el=>el===document.activeElement));
       await desktop.locator('#view-story').press('Enter');await checkSelection(desktop,id);
+      if(id==='observatory'){
+        const photo=desktop.locator('.journal-photo img');
+        assert.ok(await photo.evaluate(async img=>{await img.decode();return img.naturalWidth>0;}));
+        assert.equal(await photo.evaluate(img=>getComputedStyle(img).transform),'none');
+      }
       if(shots)await desktop.locator('#world-'+id+' h3').blur();
       await capture(desktop,'world-'+id,{section:'#worlds'});
+      if(id==='playground'){
+        const toys=desktop.locator('.playground-toys details');
+        await toys.nth(0).locator('summary').press('Enter');
+        await toys.nth(1).locator('summary').click();
+        assert.equal(await desktop.locator('.playground-toys details[open]').count(),2);
+      }
       await desktop.locator('[data-close-world]').click();
       assert.equal(await desktop.locator('#universe').getAttribute('data-mode'),'overview');
     }
@@ -118,6 +130,10 @@ async function checkSelection(page,id){
     assert.deepEqual(await desktop.locator('.currently-list strong').allTextContents(),['Building','Exploring','Creating','Life']);
     assert.equal(await desktop.locator('.notes-in-progress li').count(),4);
     assert.equal(await desktop.locator('.notes-in-progress a').count(),0);
+    assert.equal(await desktop.locator('#notes-in-progress-title span').textContent(),'Draft');
+    assert.ok((await desktop.locator('.note-podcast .note-kind').textContent()).includes('虚构样例'));
+    assert.ok((await desktop.locator('.currently-list').textContent()).includes('优先验证 AI 入住咨询和院内照护协同'));
+    assert.equal(await desktop.locator('#connect-title').textContent(),'来打个招呼');
     await capture(desktop,'selected-work',{section:'#projects'});
     await capture(desktop,'field-notes',{section:'#writing'});
     await capture(desktop,'about',{section:'#about'});
@@ -133,7 +149,7 @@ async function checkSelection(page,id){
     await desktop.waitForFunction(()=>document.querySelector('.nav-links [aria-current]')?.hash==='#writing');
 
     await desktop.locator('.essay-feature summary').click();
-    assert.ok(await desktop.locator('.essay-feature details[open]').getByText('审美不是给作品宣布一个高低。',{exact:false}).isVisible());
+    assert.ok(await desktop.locator('.essay-feature details[open]').getByText('我写东西时总忍不住补一句',{exact:false}).isVisible());
     await desktop.locator('[data-open-case]').click();
     await checkSelection(desktop,'origin');
     assert.ok(await desktop.locator('.world-case[open]').isVisible());
@@ -166,6 +182,15 @@ async function checkSelection(page,id){
       assert.equal(await sighting.locator('use').getAttribute('href'),'#roommate-'+id);
     }
     await capture(desktop,'deepseek-sighting');
+    for(const [id,name] of [['claude','Claude'],['gpt','GPT'],['deepseek','DeepSeek']]){
+      await command('clear');
+      const button=desktop.locator('.roommate-card[data-command='+id+']');
+      await button.click();
+      const reply=output.locator('.terminal-roommate').last();
+      assert.ok((await reply.textContent()).startsWith(name));
+      assert.equal(await button.locator('svg').evaluate(svg=>getComputedStyle(svg).animationName),'none');
+      await capture(desktop,'roommate-'+id,{section:'#playground .console-layout'});
+    }
     await command('clear');assert.equal(await output.textContent(),'');
     assert.deepEqual(errors,[]);
     console.log('1440px: raycast hover/click, all worlds, keyboard, hash/history, scroll navigation, timeline, console passed');
@@ -202,6 +227,16 @@ async function checkSelection(page,id){
       await checkFocus(page,'observatory');
       assert.ok(await page.locator('#view-story').evaluate(link=>link.getBoundingClientRect().top<innerHeight),width+'px story action below the viewport');
       await page.locator('#view-story').click();await checkSelection(page,'observatory');
+      if(width===390){
+        await page.locator('.roommate-card[data-command=deepseek]').tap();
+        const reply=page.locator('.terminal-roommate').last();
+        assert.ok((await reply.textContent()).includes('DeepSeek'));
+        await page.waitForFunction(()=>{
+          const box=document.querySelector('.terminal-roommate').getBoundingClientRect();
+          return box.top<innerHeight&&box.bottom>0;
+        });
+        await capture(page,'mobile-console');
+      }
       await page.locator('.nav-links [href="#connect"]').click();
       assert.equal(new URL(page.url()).hash,'#connect');
       await page.waitForFunction(()=>document.querySelector('.nav-links [aria-current]')?.hash==='#connect');
@@ -246,6 +281,20 @@ async function checkSelection(page,id){
     const frames=await animated.evaluate(()=>window.testFrames);
     await animated.waitForTimeout(240);
     assert.equal(await animated.evaluate(()=>window.testFrames),frames,'RAF continued offscreen');
+    await animated.locator('.world-directory [data-world=observatory]').click();
+    const journal=animated.locator('.journal-photo');
+    await journal.evaluate(el=>el.scrollIntoView({behavior:'instant',block:'center'}));
+    await animated.waitForFunction(()=>{
+      const photo=document.querySelector('.journal-photo');
+      const box=photo.getBoundingClientRect();
+      return Math.abs(box.top+box.height/2-innerHeight/2)<60&&photo.style.getPropertyValue('--photo-shift');
+    });
+    const firstShift=await journal.evaluate(el=>Number.parseFloat(el.style.getPropertyValue('--photo-shift')));
+    await animated.evaluate(()=>window.scrollBy({top:140,behavior:'instant'}));
+    await animated.waitForFunction(before=>Number.parseFloat(document.querySelector('.journal-photo').style.getPropertyValue('--photo-shift'))<before,firstShift);
+    const fish=animated.locator('.roommate-card[data-command=deepseek]');
+    await fish.hover();
+    assert.equal(await fish.locator('svg').evaluate(svg=>getComputedStyle(svg).animationName),'roommate-glide');
     await animated.locator('#home').evaluate(el=>el.scrollIntoView({behavior:'instant'}));
     await animated.getByRole('button',{name:'暂停动效'}).click();
     await animated.getByRole('button',{name:'继续动效'}).click();

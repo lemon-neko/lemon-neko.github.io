@@ -3,6 +3,7 @@
   const home=document.querySelector('#home'), map=document.querySelector('#universe');
   const labels=new Map([...map.querySelectorAll('[data-world]')].map(link=>[link.dataset.world,link]));
   const notes=new Map([...document.querySelectorAll('.world-note')].map(note=>[note.id.slice(6),note]));
+  const observatory=notes.get('observatory'), journalPhoto=observatory.querySelector('.journal-photo');
   const selectors=[...document.querySelectorAll('.world-links a,.world-directory a')];
   const worldIds=[...notes.keys()], defaultId=worldIds[0];
   const motion=document.querySelector('#motion-toggle'), preview=document.querySelector('#world-preview');
@@ -163,8 +164,18 @@
   for(const type of ['wheel','touchmove'])window.addEventListener(type,stopTour,{...options,passive:true});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTour();},options);
 
+  function shiftJournal(){
+    if(observatory.hidden||preference.matches)return;
+    const box=journalPhoto.getBoundingClientRect();
+    if(box.bottom<=0||box.top>=innerHeight)return;
+    const progress=(box.top+box.height/2-innerHeight/2)/(innerHeight/2);
+    const limit=Math.min(7,box.height*.028);
+    const shift=Math.round(Math.max(-1,Math.min(1,progress))*limit)+'px';
+    if(journalPhoto.style.getPropertyValue('--photo-shift')!==shift)journalPhoto.style.setProperty('--photo-shift',shift);
+  }
   function syncNav(){
     navFrame=0;
+    shiftJournal();
     const edge=Math.max(116,innerHeight*.3);
     const current=scrollY+innerHeight>=document.documentElement.scrollHeight-4?sections[sections.length-1]:sections.filter(el=>el.getBoundingClientRect().top<=edge).pop()||home;
     const sectionId=current.id==='now'?'writing':current.id==='playground'?'about':current.id;

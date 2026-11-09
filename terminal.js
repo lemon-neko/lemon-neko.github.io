@@ -186,7 +186,7 @@
         break;
       case "about":
         appendLine("羽白 — AI Engineer · Builder · Observer");
-        appendLine(document.querySelector(".hero-copy .lead").innerText, "terminal-muted");
+        appendLine(document.querySelector(".about-intro").textContent, "terminal-muted");
         break;
       case "now":
         appendLine("当前作品：");
@@ -265,12 +265,16 @@
     event.preventDefault();
     submitCommand(input.value);
   });
-  var shortcuts = document.querySelector(".console-commands");
-  if (shortcuts) {
-    shortcuts.hidden = false;
-    shortcuts.addEventListener("click", function (event) {
+  var guide = document.querySelector(".console-guide");
+  if (guide) {
+    var stackedConsole = matchMedia("(max-width:680px)");
+    guide.querySelector(".console-commands").hidden = false;
+    guide.querySelectorAll(".roommate-card").forEach(function (button) { button.disabled = false; });
+    guide.addEventListener("click", function (event) {
       var button = event.target.closest("[data-command]");
-      if (button) submitCommand(button.dataset.command);
+      if (!button) return;
+      submitCommand(button.dataset.command);
+      if (stackedConsole.matches && button.classList.contains("roommate-card")) terminal.scrollIntoView({block:"nearest"});
     });
   }
 
