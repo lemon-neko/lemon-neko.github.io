@@ -193,19 +193,24 @@
   },{threshold:.1});
   document.querySelectorAll('.section-heading,.project-card,.essay-feature').forEach(el=>revealObserver.observe(el));
   document.querySelectorAll('.project-card').forEach((el,i)=>el.style.setProperty('--reveal-delay',i*65+'ms'));
-  const sighting=document.querySelector('#roommate-sighting');
-  let sightingTimer=0, pendingSighting=false;
+  const sightings=new Map([...sky.querySelectorAll('[data-roommate]')].map(el=>[el.dataset.roommate,el]));
+  let greeting, sightingTimer=0, pendingSighting=false;
+  function clearGreeting(){
+    clearTimeout(sightingTimer);
+    greeting?.classList.remove('is-greeted');
+    greeting=null;
+    pendingSighting=false;
+  }
   function showRoommate(){
     pendingSighting=false;
-    sighting.hidden=false;
-    sightingTimer=setTimeout(()=>{sighting.hidden=true;},5200);
+    greeting.classList.add('is-greeted');
+    sightingTimer=setTimeout(clearGreeting,5200);
   }
-  window.addEventListener('yubai:roommate',({detail:{id,name}})=>{
-    clearTimeout(sightingTimer);
-    sighting.hidden=true;
-    sighting.dataset.roommate=id;
-    sighting.querySelector('use').setAttribute('href','#roommate-'+id);
-    sighting.querySelector('span').textContent=name;
+  window.addEventListener('yubai:roommate',({detail:{id}})=>{
+    const roommate=sightings.get(id);
+    if(!roommate)return;
+    clearGreeting();
+    greeting=roommate;
     const box=sky.getBoundingClientRect();
     if(box.bottom>0&&box.top<innerHeight)showRoommate();
     else pendingSighting=true;
@@ -230,7 +235,7 @@
   },options);
   window.addEventListener('pagehide',event=>{
     cancelAnimationFrame(hashFrame);stopTour();
-    clearTimeout(sightingTimer);sighting.hidden=true;pendingSighting=false;
+    clearGreeting();
     if(event.persisted)return;
     clearTimeout(nekoTimer);cancelAnimationFrame(navFrame);
     revealObserver.disconnect();tourObserver.disconnect();controller.abort();

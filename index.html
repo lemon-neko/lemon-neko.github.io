@@ -50,48 +50,31 @@
 <body>
   <a class="skip-link" href="#main">跳转到主要内容</a>
   <svg class="roommate-symbols" width="0" height="0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <clipPath id="claude-avatar-frame"><rect x="7" y="5" width="66" height="50" rx="8"/></clipPath>
+    <clipPath id="deepseek-avatar-frame"><rect x="19" y="1" width="42" height="58" rx="6"/></clipPath>
     <symbol id="roommate-claude" viewBox="0 0 80 60">
-      <ellipse cx="40" cy="54" rx="25" ry="4" fill="#0a1120" opacity=".65"/>
-      <rect x="24" y="31" width="32" height="18" rx="8" fill="#79617b" stroke="#c0a0a6" stroke-width="1.3"/>
-      <path d="M28 44h-5m29 0h5" stroke="#f1ba9e" stroke-width="4" stroke-linecap="round"/>
-      <path d="M41 13V6m0 0 5-2" fill="none" stroke="#edb394" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="47" cy="4" r="2.5" fill="#ffe0b9"/>
-      <rect x="19" y="19" width="6" height="12" rx="3" fill="#a97983"/><rect x="55" y="19" width="6" height="12" rx="3" fill="#a97983"/>
-      <rect x="23" y="12" width="34" height="26" rx="10" fill="#e0a98f" stroke="#ffcfaa" stroke-width="1.4"/>
-      <rect x="28" y="17" width="24" height="14" rx="6" fill="#392b46"/>
-      <g class="roommate-eyes" fill="#ffdfb5"><ellipse cx="35" cy="23" rx="1.9" ry="2.4"/><ellipse cx="45" cy="23" rx="1.9" ry="2.4"/></g>
-      <path d="M37 28q3 1.6 6 0" fill="none" stroke="#d5a7b2" stroke-linecap="round"/>
-      <path d="M40 44q-11-7-21-5l3 11q9-1 18 5 9-6 18-5l3-11q-10-2-21 5Z" fill="#ad91c0" stroke="#f3cfe0" stroke-width="1.4" stroke-linejoin="round"/>
-      <path d="M40 44v10m-16-12 10 3m13 0 9-3" stroke="#f3cfe0" stroke-width="1.1" stroke-linecap="round"/>
+      <rect x="7" y="5" width="66" height="50" rx="8" fill="#191a1a" stroke="#e794795c"/>
+      <image href="public/roommate-claude.png" x="-20" y="-11" width="120" height="78" clip-path="url(#claude-avatar-frame)" style="image-rendering:pixelated"/>
     </symbol>
     <symbol id="roommate-gpt" viewBox="0 0 80 60">
-      <ellipse cx="31" cy="54" rx="20" ry="4" fill="#0a1120" opacity=".6"/>
-      <path d="M19 39q-7 3-7 9m32-9q7 3 9 7m-27 2-2 4m13-4 2 4" stroke="#cac1ff" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-      <rect x="20" y="34" width="23" height="15" rx="7" fill="#8275bf" stroke="#c5b9ff"/>
-      <path d="M29 17v-6l-4-4" fill="none" stroke="#eee6ff" stroke-width="1.6" stroke-linecap="round"/>
-      <circle cx="24" cy="6" r="2.6" fill="#f4d2ff"/>
-      <rect x="14" y="15" width="35" height="25" rx="9" fill="#dcd4ff" stroke="#f9f1ff" stroke-width="1.3"/>
-      <rect x="19" y="20" width="25" height="14" rx="5" fill="#302954"/>
-      <circle cx="26" cy="26" r="2" fill="#f3ebff"/><circle cx="37" cy="26" r="2" fill="#f3ebff"/>
-      <path d="M29 30q3 2 6 0" fill="none" stroke="#baaaff" stroke-linecap="round"/>
-      <circle cx="32" cy="44" r="1.9" fill="#f1ddff"/>
-      <g class="roommate-thought" fill="#473969" stroke="#d2bafa" stroke-width="1.2">
-        <path d="M55 7q2-4 7-4 4 0 6 3 6 0 8 5 3 6-4 9-2 3-8 3-5 0-7-4-6-1-6-5 0-4 4-7Z"/>
-        <circle cx="54" cy="25" r="2.4"/><circle cx="50" cy="30" r="1.4"/>
-        <path d="M65 8v10m-5-5h10" stroke="#f4dfb3" stroke-linecap="round"/>
+      <ellipse cx="36" cy="54" rx="20" ry="3" fill="#0a1120" opacity=".65"/>
+      <path d="M22 39l-8 7m35-7 8 7m-30 1-2 5m18-5 2 5" fill="none" stroke="#bcb3f7" stroke-width="3" stroke-linecap="round"/>
+      <path d="M24 35h24l-3 12q-9 6-18 0Z" fill="#8475cc" stroke="#c4b8fc" stroke-width="1.3"/>
+      <path d="M36 13V7l7-3" fill="none" stroke="#e9e0ff" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="44" cy="4" r="2.8" fill="#f2caad"/>
+      <rect x="12" y="14" width="46" height="26" rx="13" fill="#e2dcff" stroke="#faf6ff" stroke-width="1.5"/>
+      <rect x="18" y="19" width="34" height="15" rx="7.5" fill="#292446"/>
+      <path d="M26 27q3-4 6 0m7 0q3-4 6 0" fill="none" stroke="#e8ddff" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="36" cy="43" r="2" fill="#f4ddff"/>
+      <g class="roommate-thought" fill="none" stroke="#d3c1fc" stroke-width="1.2">
+        <path d="M67 12q5 2 6 6t-5 8q-6-1-8-5t7-9Z"/>
+        <path d="M67 15v8m-4-4h8" stroke="#f4dfb3" stroke-linecap="round"/>
+        <circle cx="61" cy="29" r="1.3"/>
       </g>
     </symbol>
     <symbol id="roommate-deepseek" viewBox="0 0 80 60">
-      <ellipse cx="37" cy="54" rx="24" ry="4" fill="#0a1120" opacity=".55"/>
-      <path class="roommate-tail" d="M54 29q11-10 21-8-7 6-5 10 0 4 6 9-14 3-22-5Z" fill="#548ed4" stroke="#a6d5fa" stroke-width="1.4" stroke-linejoin="round"/>
-      <path d="M26 16q4-8 11-9l6 9" fill="#7ca9e4" stroke="#b4d9f6" stroke-width="1.4" stroke-linejoin="round"/>
-      <path d="M8 32C8 19 18 11 33 11c16 0 27 10 27 23 0 12-10 20-27 20C17 54 8 46 8 32Z" fill="#77afe8" stroke="#b7e0ff" stroke-width="1.6"/>
-      <path d="M10 36c9 7 21 9 34 8-3 6-8 8-15 8-9 0-16-5-19-16Z" fill="#c2e4f8"/>
-      <path d="M41 33q8-1 8 3-1 7-11 8l4-5Z" fill="#5187cc" stroke="#96c5f2" stroke-width="1.1"/>
-      <path d="M22 18q4-2 9-2" stroke="#bde2ff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <circle cx="22" cy="30" r="3.1" fill="#172844"/><circle cx="21" cy="29" r=".9" fill="#e2f4ff"/>
-      <path d="M13 36q4 3 8 0" fill="none" stroke="#34588c" stroke-width="1.4" stroke-linecap="round"/>
-      <g class="roommate-bubbles" fill="none" stroke="#aedbff" stroke-width="1.2"><circle cx="6" cy="20" r="2.5"/><circle cx="12" cy="13" r="1.7"/><circle cx="4" cy="7" r="1.4"/></g>
+      <rect x="18" y="0" width="44" height="60" rx="7" fill="#f9f8f7" stroke="#8eb1ec"/>
+      <image href="public/roommate-deepseek.png" x="19" y="1" width="42" height="58" clip-path="url(#deepseek-avatar-frame)"/>
     </symbol>
   </svg>
 
@@ -125,8 +108,10 @@
           <div class="sky" id="sky">
             <div class="sky-fallback" aria-hidden="true"></div>
             <canvas id="star-map" aria-hidden="true"></canvas>
-            <div class="roommate-sighting" id="roommate-sighting" aria-hidden="true" hidden>
-              <svg viewBox="0 0 80 60"><use></use></svg><span></span>
+            <div id="roommate-sighting" role="group" aria-label="星图室友">
+              <div class="roommate-sighting" data-roommate="claude"><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-claude"></use></svg><span>Claude</span></div>
+              <div class="roommate-sighting" data-roommate="gpt"><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-gpt"></use></svg><span>GPT</span></div>
+              <div class="roommate-sighting" data-roommate="deepseek"><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-deepseek"></use></svg><span>DeepSeek</span></div>
             </div>
           </div>
           <nav class="world-links" aria-label="星球导航">
@@ -316,10 +301,7 @@
         <p>有些是认真做的项目，有些是突然冒出来的想法。</p>
       </div>
       <article class="project-card project-featured" aria-labelledby="anxu-title">
-        <div class="project-media carelink-media">
-          <img src="public/project-carelink.webp" alt="安序智护老人端演示首页" width="640" height="1385" loading="lazy">
-          <img src="public/project-carelink-progress.jpg" alt="安序智护演示中的服务进度和待处理工单" width="392" height="850" loading="lazy">
-        </div>
+        <div class="project-media"><img class="project-cover" src="public/project-carelink-workbench.jpg" alt="安序智护服务工作台和一条演示陪诊工单" width="1400" height="775" loading="lazy"></div>
         <div class="project-meta">
         <h3 id="anxu-title">安序智护 <span>CareLink</span></h3>
         <p class="project-hook">让老人提出的真实需求，真的有人接住。</p>
@@ -331,7 +313,7 @@
         </div>
       </article>
       <article class="project-card" aria-labelledby="podcast-title">
-        <div class="project-media"><img class="project-cover" src="public/project-podcast.webp" alt="Podcast Workspace 公开演示的逐字稿与剪辑台" width="560" height="310" loading="lazy"></div>
+        <div class="project-media"><img class="project-cover" src="public/project-podcast-recording.jpg" alt="Podcast Workspace 公开演示的单集录制台、计时器和录制标记" width="1400" height="775" loading="lazy"></div>
         <div class="project-meta">
         <h3 id="podcast-title">Podcast Workspace</h3>
         <p class="project-hook">给播客一个舒服的工作台。</p>
@@ -340,7 +322,7 @@
         </div>
       </article>
       <article class="project-card" aria-labelledby="yougan-title">
-        <div class="project-media"><img class="project-cover" src="public/project-yougan.webp" alt="有感的作品《影子替广告牌上班》" width="560" height="310" loading="lazy"></div>
+        <div class="project-media"><img class="project-cover" src="public/project-yougan-interface.jpg" alt="有感作品流页面，展示微波炉在摸鱼的互动场景" width="1400" height="775" loading="lazy"></div>
         <div class="project-meta">
         <h3 id="yougan-title">有感 · yougan</h3>
         <p class="project-hook">收集一些让人停下来的东西。</p>
@@ -455,7 +437,7 @@
       </div>
       <div class="console-layout">
         <div class="console-guide">
-          <p>逛累了就来敲两行。这里也住着几位 AI 室友，叫一声名字，说不定就出来了。</p>
+          <p>逛累了就来敲两行。星图里的三位 AI 室友也在这儿，点一下就能打个招呼。</p>
           <div class="console-commands" hidden aria-label="可直接执行的终端命令">
             <button type="button" data-command="help"><code>help</code></button>
             <button type="button" data-command="projects"><code>projects</code></button>

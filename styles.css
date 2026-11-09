@@ -53,34 +53,33 @@ h1{margin:10px 0 3px;font-size:clamp(4rem,6.1vw,6rem);font-weight:650;line-heigh
 .map-caption button:hover{background:#252e54}
 /* ---------- Roommate sightings ---------- */
 .roommate-symbols{position:absolute}
-.roommate-sighting{--sighting-x:63%;--sighting-y:67%;position:absolute;left:var(--sighting-x);top:var(--sighting-y);display:grid;justify-items:center;pointer-events:none;color:#cbd7f5;font-size:.64rem;text-shadow:0 1px 5px #050915}
-.roommate-sighting svg{width:clamp(44px,6.6vw,82px);height:auto;aspect-ratio:4/3}
-.roommate-sighting[data-roommate=gpt]{--sighting-x:17%;--sighting-y:72%}
-.roommate-sighting[data-roommate=deepseek]{--sighting-x:29%;--sighting-y:55%}
+.roommate-sighting{--sighting-x:54%;--sighting-y:76%;position:absolute;left:var(--sighting-x);top:var(--sighting-y);transform:translate(-50%,-50%);display:grid;justify-items:center;pointer-events:none;color:#cbd7f5;font-size:.65rem;line-height:1.35;text-shadow:0 1px 6px #050915}
+.roommate-sighting svg{width:clamp(43px,5.5vw,75px);height:auto;aspect-ratio:4/3;filter:drop-shadow(0 4px 8px #060a17b0)}
+.roommate-sighting[data-roommate=gpt]{--sighting-x:37%;--sighting-y:77%}
+.roommate-sighting[data-roommate=deepseek]{--sighting-x:43%;--sighting-y:24%}
+.roommate-sighting.is-greeted{color:#fff;--sprite-play:running}
+.roommate-sighting.is-greeted svg{filter:drop-shadow(0 0 8px #a6b1f1)}
+.universe-map:is([data-mode=focus],[data-mode=auto]) [data-roommate=claude]{--sighting-x:76%;--sighting-y:76%}
+.universe-map:is([data-mode=focus],[data-mode=auto]) [data-roommate=gpt]{--sighting-x:79%;--sighting-y:25%}
+.universe-map:is([data-mode=focus],[data-mode=auto]) [data-roommate=deepseek]{--sighting-x:14%;--sighting-y:46%}
 .terminal-roommate{display:flow-root;color:#e5defa}
 .terminal-roommate svg{float:left;width:48px;height:36px;margin:0 9px 3px 0}
+@media(max-width:560px){
+ .roommate-sighting{font-size:.58rem}
+ .roommate-sighting svg{width:clamp(37px,11vw,52px)}
+}
 @media(prefers-reduced-motion:no-preference){
- .roommate-sighting{animation:roommate-in 420ms ease-out both;--sprite-play:running}
+ .roommate-sighting.is-greeted svg{animation:roommate-nod 650ms ease-in-out 2}
+ .roommate-sighting[data-roommate=deepseek].is-greeted svg{animation:roommate-glide 900ms ease-in-out 2 alternate}
  .roommate-card:is(:hover,:focus-visible):enabled{--sprite-play:running}
  .roommate-card[data-command=claude]:is(:hover,:focus-visible):enabled svg{animation:roommate-nod 1.4s ease-in-out both}
  .roommate-card[data-command=gpt]:is(:hover,:focus-visible):enabled svg{animation:roommate-hover 1.8s ease-in-out infinite alternate}
  .roommate-card[data-command=deepseek]:is(:hover,:focus-visible):enabled svg{animation:roommate-glide 1.7s ease-in-out infinite alternate}
- .roommate-eyes,.roommate-thought,.roommate-tail,.roommate-bubbles{transform-box:fill-box;transform-origin:center}
- .roommate-eyes{animation:roommate-blink 3.2s linear infinite}
- .roommate-thought{animation:roommate-idea 2.4s ease-in-out infinite alternate}
- .roommate-tail{transform-origin:left center;animation:roommate-tail .8s ease-in-out infinite alternate}
- .roommate-bubbles{animation:roommate-bubbles 1.5s ease-out infinite}
- .roommate-eyes,.roommate-thought,.roommate-tail,.roommate-bubbles{animation-play-state:var(--sprite-play,paused)}
+ .roommate-thought{transform-box:fill-box;transform-origin:center;animation:roommate-idea 2.4s ease-in-out infinite alternate;animation-play-state:var(--sprite-play,paused)}
  @keyframes roommate-nod{35%{transform:translateY(1px) rotate(-4deg)}70%{transform:rotate(2deg)}}
  @keyframes roommate-hover{to{transform:translateY(-4px)}}
  @keyframes roommate-glide{to{transform:translate(4px,-2px) rotate(4deg)}}
- @keyframes roommate-blink{44%,51%{transform:scaleY(1)}47%{transform:scaleY(.12)}}
  @keyframes roommate-idea{to{transform:translateY(-2px);opacity:.68}}
- @keyframes roommate-tail{to{transform:rotate(11deg)}}
- @keyframes roommate-bubbles{to{transform:translateY(-5px);opacity:.35}}
- .roommate-sighting[data-roommate=deepseek]{animation:roommate-swim 4.9s ease-in-out both}
- @keyframes roommate-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
- @keyframes roommate-swim{0%{opacity:0;transform:translate(25px,8px)}22%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translate(-38px,-6px)}}
 }
 /* ---------- Interactive terminal ---------- */
 .terminal-shell {
@@ -421,9 +420,6 @@ main>.section{padding-block:var(--section-space);border-bottom:1px solid var(--b
 .project-featured{grid-template-columns:minmax(0,1.52fr) minmax(0,1fr);align-items:center;gap:clamp(18px,5vw,66px);padding-bottom:clamp(22px,4vw,44px);border-bottom:1px solid var(--border)}
 .project-media{border:1px solid var(--border);border-radius:14px;overflow:hidden;aspect-ratio:56/31;background:var(--surface);transition:border-color 240ms}
 .project-cover,.essay-feature img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 500ms cubic-bezier(.2,.7,.25,1)}
-.carelink-media{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5%;padding:5% 13% 0;align-items:start;background:radial-gradient(ellipse at 45% 5%,#243751,var(--surface) 75%)}
-.carelink-media img{display:block;width:100%;height:auto;border-radius:10px 10px 0 0;transition:transform 500ms cubic-bezier(.2,.7,.25,1)}
-.carelink-media img+img{margin-top:12%}
 .project-card:focus-within .project-media,.project-card:hover .project-media{border-color:#8794cc}
 .project-card:hover img,.project-card:focus-within img{transform:scale(1.035)}
 .project-card h3,.essay-feature h3{margin:0;font-size:clamp(1.28rem,2.3vw,2rem);line-height:1.25;letter-spacing:-.02em}

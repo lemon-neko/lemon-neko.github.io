@@ -158,8 +158,7 @@
     var roommate = roommates[id];
     var reply = roommate.replies[Math.floor(Math.random() * roommate.replies.length)];
     var line = appendLine(roommate.name + " · " + reply, "terminal-roommate");
-    var avatar = document.querySelector("#roommate-sighting svg").cloneNode(true);
-    avatar.querySelector("use").setAttribute("href", "#roommate-" + id);
+    var avatar = document.querySelector('#roommate-sighting [data-roommate="' + id + '"] svg').cloneNode(true);
     avatar.setAttribute("aria-hidden", "true");
     line.prepend(avatar);
     var link = document.createElement("a");

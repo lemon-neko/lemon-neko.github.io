@@ -71,6 +71,9 @@ async function checkSelection(page,id){
     }
     const desktop=await checkedPage({viewport:{width:1440,height:980},reducedMotion:'reduce'});
     await desktop.goto(url);await desktop.locator('#sky.is-rendered').waitFor();
+    const mapRoommates=desktop.locator('#roommate-sighting .roommate-sighting');
+    assert.deepEqual(await mapRoommates.locator('span').allTextContents(),['Claude','GPT','DeepSeek']);
+    assert.equal(await desktop.locator('#roommate-sighting .roommate-sighting:visible').count(),3);
     assert.deepEqual(await desktop.locator('main > [id]').evaluateAll(nodes=>nodes.map(el=>el.id)),sections);
     assert.equal(await desktop.locator('.hero-principle').textContent(),'Enough abstraction makes it concrete.');
     assert.equal(await desktop.locator('.world-directory [data-world=ventures] .world-directory-name').textContent(),'Life');
@@ -127,6 +130,9 @@ async function checkSelection(page,id){
     await checkFocus(desktop,'origin');
     assert.ok(await desktop.locator('#world-playground').isVisible());
     assert.equal(await desktop.locator('#projects .project-card').count(),3);
+    assert.deepEqual(await desktop.locator('#projects .project-cover').evaluateAll(images=>images.map(img=>img.getAttribute('src'))),[
+      'public/project-carelink-workbench.jpg','public/project-podcast-recording.jpg','public/project-yougan-interface.jpg'
+    ]);
     assert.deepEqual(await desktop.locator('.currently-list strong').allTextContents(),['Building','Exploring','Creating','Life']);
     assert.equal(await desktop.locator('.notes-in-progress li').count(),4);
     assert.equal(await desktop.locator('.notes-in-progress a').count(),0);
@@ -175,11 +181,12 @@ async function checkSelection(page,id){
       const reply=output.locator('.terminal-roommate').last();
       assert.ok((await reply.textContent()).startsWith(name));
       assert.equal(await reply.locator('use').getAttribute('href'),'#roommate-'+id);
-      assert.ok(!(await desktop.locator('#roommate-sighting').isVisible()),'offscreen sighting was shown early');
+      assert.equal(await desktop.locator('#roommate-sighting .is-greeted').count(),0,'offscreen greeting started early');
       await reply.locator('a').click();
-      const sighting=desktop.locator('#roommate-sighting[data-roommate='+id+']');
+      const sighting=desktop.locator('#roommate-sighting [data-roommate='+id+'].is-greeted');
       await sighting.waitFor();
       assert.equal(await sighting.locator('use').getAttribute('href'),'#roommate-'+id);
+      assert.equal(await desktop.locator('#roommate-sighting .roommate-sighting:visible').count(),3);
     }
     await capture(desktop,'deepseek-sighting');
     for(const [id,name] of [['claude','Claude'],['gpt','GPT'],['deepseek','DeepSeek']]){
@@ -216,6 +223,7 @@ async function checkSelection(page,id){
     for(const [width,height] of [[1280,900],[768,1024],[390,844],[375,812]]){
       const page=await checkedPage({viewport:{width,height},reducedMotion:'reduce',hasTouch:width<500});
       await page.goto(url);await page.locator('#sky.is-rendered').waitFor();
+      assert.equal(await page.locator('#roommate-sighting .roommate-sighting:visible').count(),3);
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),width+'px overflow');
       if(width>900)assert.ok(await page.locator('.world-links a').evaluateAll(links=>links.every(link=>{
         const box=link.getBoundingClientRect();return box.left>=0&&box.right<=innerWidth;
@@ -303,6 +311,7 @@ async function checkSelection(page,id){
     assert.equal(await animated.locator('#motion-toggle').isVisible(),false);
     const noJS=await checkedPage({javaScriptEnabled:false});
     await noJS.goto(url);
+    assert.equal(await noJS.locator('#roommate-sighting .roommate-sighting:visible').count(),3);
     await noJS.locator('.world-links [data-world=origin]').click();
     assert.equal(new URL(noJS.url()).hash,'#world-origin');
     assert.ok(await noJS.locator('#world-origin h3').isVisible());

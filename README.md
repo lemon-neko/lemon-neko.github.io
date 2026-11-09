@@ -16,7 +16,7 @@ python3 -m http.server --bind 127.0.0.1 8080
 
 - 白羽星核与 技术、智能、人生、观察者、创意五座微缩世界。正文里的简介是预览、无障碍描述和自动探索的共同数据来源。「人生」保留 `ventures` 内部标识。可以点击模型或使用 HTML 星球链接在首屏聚焦。悬停和键盘聚焦会显示简介，点击后保留预览和 `#focus-ventures` 等定位链接。View Story 进入唯一的 Worlds 详情区，`#world-ventures` 等直达链接保留。Escape 或「返回星图」回到首屏。自动探索由访客开启，每 4.6 秒更新一次镜头与预览，主动操作、离开星图或切到后台时停止。五个详情采用不同的插图和排版，观察者的实拍照片支持轻微滚动视差，创意页有可用键盘或触控打开的小物件。
 - 作品、当前坐标、观察笔记、个人理念与 GitHub 均可直接访问。纵向顺序为 Hero → Worlds → Selected Work → Field Notes → Now → About → Space Console → Connect。Field Notes 收录有感公开目录中的编辑手记（可在本页展开全文）、播客工作台的公开虚构样例和一篇通用推理测评框架笔记，尚未发布的想法单列为「还在想的题目」。未添加未证实的发布日期、工作经历或联系渠道。
-- 终端保留 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo`、`clear`、历史与隐藏 `neko`；`universe` 返回全景，`orbit` 开启自动探索，`visit <planet>` 打开指定星球的故事。快捷按钮复用相同的命令解析与历史。项目链接与当前状态直接读取页面内容。`visit life` 同样能进入「人生」。`claude`、`gpt`、`deepseek` 是本地彩蛋，可以输入命令，也可以点选终端旁的室友。两种方式都会显示原创 SVG 角色和预写回复；返回星图可看到短暂来访。
+- 终端保留 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo`、`clear`、历史与隐藏 `neko`；`universe` 返回全景，`orbit` 开启自动探索，`visit <planet>` 打开指定星球的故事。快捷按钮复用相同的命令解析与历史。项目链接与当前状态直接读取页面内容。`visit life` 同样能进入「人生」。`claude`、`gpt`、`deepseek` 是本地彩蛋，可以输入命令，也可以点选终端旁的室友。三位室友默认出现在星图；两种命令方式都会显示头像和预写回复，回到星图会短暂高亮对应角色。Claude 与 DeepSeek 使用提供的参考图，GPT 使用站内 SVG 插画。
 - 无 WebGL、节省流量、模块加载失败或直接打开本地文件时显示静态星图；HTML 入口仍然可用。减少动态效果时保留可点击的静止 3D 场景。场景离开视口或切到后台后暂停渲染。
 
 ## 文件与资源
@@ -28,7 +28,7 @@ python3 -m http.server --bind 127.0.0.1 8080
 - `public/vendor/`：本地固定版本 Three.js 0.180.0 模块及 MIT 许可。
 - `public/universe-*.webp`：独立生成的深空远景和实时模型的静态回退渲染。远景由 ImageGen 生成，提示为「近黑靛色深空、细小银蓝星光、右上远处星系、右下蓝色地平线；左侧留空，无文字或前景对象」。
 - `public/observatory-dusk.webp`：观察者的实拍照片，摄影师 [MAK（Unsplash）](https://unsplash.com/photos/tree-shadows-cast-on-a-tiled-sidewalk-at-dusk-LfnG_9kXGIA)，按 [Unsplash License](https://unsplash.com/license) 使用。旁边另有标注为有感生成视觉的原配图。
-- `public/world-*.webp`：各星球的模型渲染。作品图另包含 CareLink 仓库的老人端首页和服务进度演示截图（`apps/senior-web/screenshots/06-progress.jpg`）、Podcast Workspace 的公开演示截图与有感仓库的原始作品图。分享封面 `public/universe-share.jpg` 由站内远景和静态星图合成。
+- `public/world-*.webp`：各星球的模型渲染。精选项目封面来自实际界面截图：CareLink 的服务工作台（本地陪诊演示）、Podcast Workspace 公开虚构单集的录制台、有感站点的作品流首页。手记与观察者仍使用有感的原始作品图。分享封面 `public/universe-share.jpg` 由站内远景和静态星图合成。
 
 ## 验证
 
