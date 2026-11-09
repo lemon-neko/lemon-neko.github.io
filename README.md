@@ -1,66 +1,38 @@
-# 羽白 — 个人入口主页
+# 羽白 · Personal Universe
 
-羽白的个人主页与统一入口，静态托管于 GitHub Pages。
+A Universe in Progress. 羽白的个人站，使用原生 HTML、CSS、JavaScript，静态托管于 GitHub Pages。
 
-## 页面内容
+## 运行
 
-- 个人身份、头像与简介
-- Projects 项目展示：安序智护概念演示与「已获得 ITEC Hackathon 全国一等奖」获奖标识
-- Podcast Workspace 播客制作工作台与只读在线镜像入口
-- 有感 · yougan：创意、审美与共情内容网站，包含原创动态作品、视觉实验和轻互动
-- 可输入命令的互动个人终端 Playground
-- 当前关注和正在进行的方向
-- About 与兴趣领域
-- GitHub 入口
-- 自动跟随系统的亮色 / 暗色主题
-- Cinematic Lite 电影氛围：橙紫光雾、运行时胶片颗粒、暗角与克制的镜头式入场
-- 全页本地电影背景：静音循环视频、静态封面和自动播放降级
-- 头像微视差、卡片聚光和终端扫描线；触摸设备与减少动态效果偏好会自动降级
-- 响应式布局与键盘无障碍支持
-- Open Graph、Twitter Card、JSON-LD、robots.txt 和 sitemap.xml
-
-## 文件结构
-
-```text
-.
-├── index.html
-├── styles.css
-├── terminal.js
-├── cinematic.js
-├── public/
-│   ├── favicon.svg
-│   ├── hero-cinematic.m4v
-│   ├── hero-cinematic-poster.jpg
-│   └── pic.jpg
-├── robots.txt
-├── sitemap.xml
-└── README.md
-```
-
-## Playground 命令
-
-终端支持 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo <text>` 和 `clear`。`projects` 展示项目介绍、获奖信息与体验入口；`now` 列出当前作品与关注方向；`links` 提供 GitHub 和全部项目入口。项目内容直接读取页面卡片，新增或修改卡片后会自动同步到终端。使用上下方向键可浏览命令历史，按 `Ctrl/⌘ + L` 可快速清屏。隐藏命令 `neko` 会唤醒一只 ASCII 小猫，并触发一次短暂的色差彩蛋。
-
-## Cinematic Lite
-
-电影氛围全部由原生 CSS、Canvas 与 JavaScript 实现，不使用电影素材，也不依赖 Three.js、GSAP 或外部运行时。`cinematic.js` 负责一次性生成低分辨率颗粒纹理、视口揭示、头像视差、卡片聚光、页面可见性和动作偏好；终端只负责派发彩蛋事件。
-
-当系统启用“减少动态效果”时，视差、漂移、揭示和故障动画会关闭，仅保留静态低透明度纹理；触摸或粗指针设备也不会启用鼠标跟随效果。
-
-背景视频经过本地压缩并随站点发布，不依赖远程视频地址。它固定覆盖整个页面，让 Hero、终端、About 与 Connect 共享同一电影场景；内容层使用深色半透明材质保持可读性。桌面和手机端默认静音循环播放；页面进入后台时自动暂停，返回后恢复。系统开启“减少动态效果”、省流量模式、自动播放被阻止或资源加载失败时，会回退到本地静态封面。
-
-## 本地预览
-
-项目不需要构建工具，可直接打开 `index.html`，或启动静态服务器：
+无需安装依赖或构建。在仓库根目录运行：
 
 ```bash
 python3 -m http.server --bind 127.0.0.1 8080
 ```
 
-然后访问 `http://localhost:8080`。
+访问 http://127.0.0.1:8080/。直接打开 `index.html` 也能浏览静态星图、星球详情和终端；浏览器的本地文件模块限制需要用 HTTP 预览才能渲染实时 3D。
 
-## 部署
+## 内容与交互
 
-项目通过 GitHub Pages 部署。推送到 `main` 分支后，访问：
+- 白羽星核与 Origin、Intelligence、Ventures、Observatory、Playground 五座微缩世界。可以直接点击模型，也可以通过 HTML 星球链接操作；Escape 或「返回宇宙」关闭详情。
+- 作品、当前坐标、观察笔记、个人理念与 GitHub 均可直接访问。观察笔记只收录已有公开创作入口。
+- 终端保留 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo`、`clear`、历史与隐藏 `neko`；新增 `universe`、`orbit`、`visit <planet>`。项目链接统一读取页面卡片。
+- 无 WebGL、节省流量、模块加载失败或直接打开本地文件时显示静态星图；HTML 入口仍然可用。减少动态效果时保留可点击的静止 3D 场景。场景离开视口或切到后台后暂停渲染。
 
-https://lemon-neko.github.io/
+## 文件与资源
+
+- `index.html`、`styles.css`：语义结构、作品数据、SEO 与桌面/移动端布局。
+- `universe-ui.js`：HTML 星球入口、详情、导航及终端桥接。
+- `universe.js`、`universe-models.js`：实时场景、模型、相机和射线交互；不加载原有背景视频。
+- `terminal.js`：访客终端。
+- `public/vendor/`：本地固定版本 Three.js 0.180.0 模块及 MIT 许可。
+- `public/universe-*.webp`：独立生成的深空远景和实时模型的静态回退渲染。远景由 ImageGen 生成，提示为「近黑靛色深空、细小银蓝星光、右上远处星系、右下蓝色地平线；左侧留空，无文字或前景对象」。
+- `public/world-*.webp`：各星球的模型渲染。作品图另包含 CareLink 仓库的老人端演示截图、Podcast Workspace 的公开演示截图与有感仓库的原始作品图。
+
+## 验证
+
+Node.js 22 以上可运行 `node --test tests/universe.test.mjs`，检查五个模型、HTML 入口和静态资源路径。
+
+## GitHub Pages
+
+从 `main` 分支的根目录发布即可；无需 npm 安装、构建步骤或外部 CDN。保持 `public/vendor/` 与 `public/*.webp` 一起发布，页面资源路径均相对于站点目录。
