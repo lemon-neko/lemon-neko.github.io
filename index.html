@@ -15,6 +15,7 @@
   <link rel="shortcut icon" href="public/yubai-mark-32.png" type="image/png">
   <link rel="apple-touch-icon" href="public/apple-touch-icon.png">
   <link rel="canonical" href="https://lemon-neko.github.io/">
+  <script src="roommate-dialogue.js" defer></script>
   <script src="terminal.js" defer></script>
   <script src="universe-ui.js" defer></script>
 
@@ -116,7 +117,8 @@
             <p class="preview-title"><strong id="preview-name">五个世界，一座宇宙。</strong> <span id="preview-name-zh"></span></p>
             <p id="preview-intro">选择一颗星球，近距离看看它的微缩世界。</p>
           </div>
-          <button type="button" id="roommate-call" hidden>敲响星核</button>
+          <button type="button" id="roommate-call" hidden>召唤室友！</button>
+          <a id="roommate-channel" href="#playground" hidden>去终端看群聊 →</a>
           <a id="view-story" href="#world-origin" hidden>View Story <span aria-hidden="true">↗</span></a>
         </aside>
       </div>
@@ -125,11 +127,11 @@
       <section class="section world-index" id="worlds" aria-labelledby="world-title">
         <div class="section-heading"><h2 id="world-title">五个世界</h2><span>Worlds</span></div>
         <nav class="world-directory" aria-label="浏览星球">
-          <a href="#world-origin" data-world="origin"><span aria-hidden="true">01</span><span class="world-directory-name">Origin</span></a>
-          <a href="#world-intelligence" data-world="intelligence"><span aria-hidden="true">02</span><span class="world-directory-name">Intelligence</span></a>
-          <a href="#world-ventures" data-world="ventures"><span aria-hidden="true">03</span><span class="world-directory-name">Life</span></a>
-          <a href="#world-observatory" data-world="observatory"><span aria-hidden="true">04</span><span class="world-directory-name">Observatory</span></a>
-          <a href="#world-playground" data-world="playground"><span aria-hidden="true">05</span><span class="world-directory-name">Playground</span></a>
+          <a href="#world-origin" data-world="origin"><span aria-hidden="true">01</span><span class="world-directory-name">Origin</span><small>理解世界</small></a>
+          <a href="#world-intelligence" data-world="intelligence"><span aria-hidden="true">02</span><span class="world-directory-name">Intelligence</span><small>拓展认知</small></a>
+          <a href="#world-ventures" data-world="ventures"><span aria-hidden="true">03</span><span class="world-directory-name">Life</span><small>主动创造</small></a>
+          <a href="#world-observatory" data-world="observatory"><span aria-hidden="true">04</span><span class="world-directory-name">Observatory</span><small>感受世界</small></a>
+          <a href="#world-playground" data-world="playground"><span aria-hidden="true">05</span><span class="world-directory-name">Playground</span><small>表达自我</small></a>
         </nav>
         <article class="world-note" id="world-origin" data-name="Origin">
           <figure class="world-visual">
@@ -140,6 +142,12 @@
                 <path class="motif-tick" d="M49 54h46m-46 9h27m385 192h50m-29-9h29"/>
               </svg>
               <img class="world-portrait" src="public/world-origin.webp" alt="" width="560" height="310" loading="lazy">
+            </div>
+            <div class="origin-modules" aria-label="测评流程模块">
+              <details name="origin-module"><summary>Plan</summary><p>定下本次测评的目标、引擎和执行范围。</p></details>
+              <details name="origin-module"><summary>Suite</summary><p>按能力和场景把用例分组，便于单独跑一组。</p></details>
+              <details name="origin-module"><summary>Case</summary><p>把输入、预期结果和断言写成一个可重复的用例。</p></details>
+              <details name="origin-module"><summary>Pipeline</summary><p>在隔离环境执行用例，再汇总日志和结果。</p></details>
             </div>
             <figcaption>拆装台 · 先看看零件是怎么接上的</figcaption>
           </figure>
@@ -183,6 +191,17 @@
               <p>这点挺像照镜子。至于以后还能一起做什么，我也想边用边看。</p>
             </div>
             <ul class="world-tags" aria-label="主题" lang="en"><li>AI</li><li>Agent</li><li>Collaboration</li><li>Learning</li></ul>
+            <div class="ai-collab" data-world-lab>
+              <h4>同一道题，三种起手式</h4>
+              <p class="lab-question">「我想学一个完全陌生的东西，该从哪开始？」</p>
+              <div class="ai-voices" aria-label="选择 AI 室友">
+                <button type="button" data-world-answer="先写下一件你想弄懂的事，再列出你已经知道的。我们从中间那块空白开始。" aria-pressed="true" disabled><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-claude"></use></svg>Claude</button>
+                <button type="button" data-world-answer="给自己二十分钟，先做个最小样品。比如学摄影，就在同一扇窗前拍三张完全不同的光。" aria-pressed="false" disabled><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-gpt"></use></svg>GPT</button>
+                <button type="button" data-world-answer="先找一个能复现的例子，跑通后只改一个变量。看结果变在哪，再决定下一步查什么。" aria-pressed="false" disabled><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-deepseek"></use></svg>DeepSeek</button>
+              </div>
+              <p class="world-answer" role="status">先写下一件你想弄懂的事，再列出你已经知道的。我们从中间那块空白开始。</p>
+              <small>本地预设回应</small>
+            </div>
             <a href="#projects">看看一起做了什么 →</a>
           </div>
         </article>
@@ -196,6 +215,17 @@
                 <path class="motif-tick" d="M514 70V42l21 6-21 8"/>
               </svg>
               <img class="world-portrait" src="public/world-ventures.webp" alt="" width="560" height="310" loading="lazy">
+            </div>
+            <div class="life-route" data-world-lab>
+              <div class="life-waypoints" aria-label="旅程节点">
+                <svg viewBox="0 0 500 80" preserveAspectRatio="none" aria-hidden="true"><path d="M50 19C100 19 102 42 150 42S207 19 250 19 306 42 350 42 415 19 450 19M250 19Q284 11 310 5M350 42Q404 53 476 69"/></svg>
+                <button type="button" data-world-answer="把惦记很久的事写下来。它还不用是一个计划。" aria-pressed="true" disabled>想法</button>
+                <button type="button" data-world-answer="先找一个今天就能做的小步骤，剩下的以后再补。" aria-pressed="false" disabled>规划</button>
+                <button type="button" data-world-answer="做个能跑起来的版本。笨一点也行。" aria-pressed="false" disabled>行动</button>
+                <button type="button" data-world-answer="走过一次，才知道地图上哪条线该擦掉。" aria-pressed="false" disabled>迭代</button>
+                <button type="button" data-world-answer="没走过的路先留着。说不定哪天会想拐进去。" aria-pressed="false" disabled>下一段旅程</button>
+              </div>
+              <p class="world-answer" role="status">把惦记很久的事写下来。它还不用是一个计划。</p>
             </div>
             <figcaption>出发，绕一绕，走到哪儿算哪儿。</figcaption>
           </figure>
@@ -215,15 +245,30 @@
         </article>
         <article class="world-note" id="world-observatory" data-name="Observatory">
           <figure class="world-visual">
-            <div class="journal-photo">
-              <img src="public/observatory-dusk.webp" alt="黄昏时分，树影落在铺砖的人行道上" width="900" height="600" loading="lazy">
-            </div>
+            <details class="journal-entry journal-feature">
+              <summary>
+                <span class="journal-photo"><img src="public/observatory-dusk.webp" alt="黄昏时分，树影落在铺砖的人行道上" width="900" height="600" loading="lazy"></span>
+                <span class="journal-title">光走得比人慢</span>
+              </summary>
+              <p>影子把地砖分成了两半。我看了好一会儿，才注意到亮处和暗处原来铺着同样的砖。</p>
+            </details>
             <div class="journal-credit">黄昏的树影 · <a href="https://unsplash.com/photos/tree-shadows-cast-on-a-tiled-sidewalk-at-dusk-LfnG_9kXGIA">摄影 MAK</a></div>
             <div class="journal-strip">
-              <img class="world-portrait" src="public/world-observatory.webp" alt="" width="560" height="310" loading="lazy">
-              <img class="world-snapshot" src="public/project-yougan.webp" alt="有感作品中落在广告牌上的树影" width="560" height="310" loading="lazy">
+              <div>
+                <details class="journal-entry">
+                  <summary><img class="world-snapshot" src="public/observatory-empty-chair.webp" alt="阳光斜落在空桌与椅子上" width="720" height="480" loading="lazy"><span class="journal-title">空着的椅子</span></summary>
+                  <p>光斜斜地照过来，桌椅的影子比桌椅本身还显眼。照片里没什么在发生，倒适合多看一会儿。</p>
+                </details>
+                <div class="journal-credit"><a href="https://unsplash.com/photos/empty-chair-and-table-with-dramatic-sunlight-shadows-Uoe9z4fA9Y8">摄影 Cam Ballard</a></div>
+              </div>
+              <div>
+                <details class="journal-entry">
+                  <summary><img class="world-snapshot" src="public/project-yougan.webp" alt="有感作品中落在广告牌上的树影" width="560" height="310" loading="lazy"><span class="journal-title">广告牌今天休息</span></summary>
+                  <p>看这张有感的配图，最先认出来的是树影。广告牌写了什么，反而不重要了。</p>
+                </details>
+                <div class="journal-credit">《影子替广告牌上班》 · 有感生成视觉</div>
+              </div>
             </div>
-            <figcaption>《影子替广告牌上班》 · 有感生成视觉</figcaption>
           </figure>
           <div class="world-copy">
             <h3>观察者</h3>
@@ -236,6 +281,7 @@
               <p>说起来简单，做到有点难。今天路上要是碰到好看的光，我还是想停下来看看。</p>
             </div>
             <ul class="world-tags" aria-label="主题" lang="en"><li>Life</li><li>Emotion</li><li>Empathy</li><li>Reflection</li></ul>
+            <img class="journal-planet world-portrait" src="public/world-observatory.webp" alt="" width="560" height="310" loading="lazy">
             <a href="#writing">翻翻最近的碎碎念 →</a>
           </div>
         </article>
@@ -270,6 +316,19 @@
               <p>慢慢攒，慢慢试。说不定攒着攒着，就有了一个挺有意思的小角落。</p>
             </div>
             <ul class="world-tags" aria-label="主题" lang="en"><li>Creativity</li><li>Empathy</li><li>Aesthetics</li><li>Art</li></ul>
+            <div class="creative-lab" id="creative-lab">
+              <h4>灵感试验台</h4>
+              <p class="world-answer" id="idea-result" role="status">给路灯写一段只有猫能听见的开场白。</p>
+              <button type="button" class="world-action" data-creative="idea" disabled>抽一条灵感</button>
+              <div class="sticker-maker">
+                <svg viewBox="0 0 64 64" id="sticker-preview" role="img" aria-label="雾紫色星星" data-form="0" data-color="0">
+                  <path d="M32 4 39 24 60 32 39 40 32 60 25 40 4 32 25 24Z"/>
+                  <circle cx="32" cy="32" r="23"/>
+                  <path d="M32 5 59 32 32 59 5 32Z"/>
+                </svg>
+                <div><strong>拼一枚贴纸</strong><div class="sticker-controls"><button type="button" class="world-action" data-creative="shape" disabled>换形状</button><button type="button" class="world-action" data-creative="color" disabled>换颜色</button></div><span class="sr-only" id="sticker-status" role="status"></span></div>
+              </div>
+            </div>
             <div class="world-links-inline">
               <a data-project-link="podcast-title" href="#podcast-title">Podcast Workspace ↗</a>
               <a data-project-link="yougan-title" href="#yougan-title">有感 · yougan ↗</a>
@@ -277,7 +336,13 @@
             </div>
           </div>
         </article>
-        <a class="back-universe" href="#home" data-close-world>返回星图 ↑</a>
+        <div class="world-exits">
+          <nav class="world-pager" aria-label="相邻世界" hidden>
+            <a href="#world-playground" rel="prev"><small>← 上一个世界</small><strong>Playground</strong></a>
+            <a href="#world-intelligence" rel="next"><small>下一个世界 →</small><strong>Intelligence</strong></a>
+          </nav>
+          <a class="back-universe" href="#home" data-close-world>返回星图 ↑</a>
+        </div>
     </section>
 
     <section class="section projects" id="projects" aria-labelledby="projects-title">
@@ -422,7 +487,7 @@
       </div>
       <div class="console-layout">
         <div class="console-guide">
-          <p>逛累了就来敲两行。星图里的三位 AI 室友也在这儿，点一下就能打个招呼。</p>
+          <p>逛累了就来敲两行。可以单独找室友聊天，也可以潜进合租群看他们互相拆台。</p>
           <div class="console-commands" hidden aria-label="可直接执行的终端命令">
             <button type="button" data-command="help"><code>help</code></button>
             <button type="button" data-command="projects"><code>projects</code></button>
@@ -433,16 +498,27 @@
             <h3 id="roommates-title">AI 室友</h3>
             <button class="roommate-card" type="button" data-command="claude" disabled>
               <svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-claude"></use></svg>
-              <span><strong>Claude</strong><small>安静的读书搭子。</small></span>
+              <span><strong>Claude</strong><small>温柔的文学学姐，合上书才开始补刀。</small></span>
             </button>
             <button class="roommate-card" type="button" data-command="gpt" disabled>
               <svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-gpt"></use></svg>
-              <span><strong>GPT</strong><small>手里总有个没试过的点子。</small></span>
+              <span><strong>GPT</strong><small>每天拯救一次宇宙，顺手开两个新坑。</small></span>
             </button>
             <button class="roommate-card" type="button" data-command="deepseek" disabled>
               <svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-deepseek"></use></svg>
-              <span><strong>DeepSeek</strong><small>路过星球的蓝色大肥鱼。</small></span>
+              <span><strong>DeepSeek</strong><small>蓝色大肥鱼。会摸鱼，也会救场。</small></span>
             </button>
+          </div>
+          <div class="roommate-channels" role="group" aria-labelledby="roommate-channels-title" hidden>
+            <h3 id="roommate-channels-title">合租群频道</h3>
+            <div class="console-commands">
+              <button type="button" data-command="chat">随机群聊</button>
+              <button type="button" data-command="chat midnight">深夜</button>
+              <button type="button" data-command="chat coding">开发部</button>
+              <button type="button" data-command="chat life">鱼生</button>
+              <button type="button" data-command="chat yubai">羽白日记</button>
+              <button type="button" data-command="chat chaos">混沌脑洞</button>
+            </div>
           </div>
         </div>
       <div class="terminal-shell" data-terminal>
@@ -459,6 +535,7 @@
           <div id="terminal-output" class="terminal-output" role="log" aria-live="polite" aria-relevant="additions text">
             <p class="terminal-line terminal-entry terminal-boot">Yubai Space Console · v2.5</p>
             <p class="terminal-line terminal-entry terminal-boot">连接成功。输入 <code>help</code> 查看命令，或输入 <code>visit ventures</code> 探索星球。</p>
+            <p class="terminal-line terminal-entry terminal-muted">室友频道为本地角色剧本，非模型实时输出。</p>
           </div>
           <form id="terminal-form" class="terminal-form">
             <label class="sr-only" for="terminal-input">输入终端命令</label>

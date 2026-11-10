@@ -21,7 +21,7 @@ async function capture(page,name,{section,...options}={}){
     return img.decode();
   })));
   const surface=section?page.locator(section):page;
-  await surface.screenshot({path:path.join(shots,name+'.png'),style:section?'.site-nav{position:static!important}':'',...options});
+  await surface.screenshot({path:path.join(shots,name+'.png'),style:section?'.site-nav{position:static!important}.skip-link{visibility:hidden!important}':'',...options});
 }
 const ids=['origin','intelligence','ventures','observatory','playground'];
 const intros=[
@@ -51,6 +51,18 @@ async function checkRoamingBounds(page){
     });
   });
   assert.deepEqual(overlaps,[],'roommates leave the sky or overlap planet labels');
+}
+async function checkRoommateReply(page,id){
+  await page.locator('#roommate-reply[data-speaker='+id+']').waitFor();
+  const anchored=await page.locator('#roommate-reply').evaluate(reply=>{
+    const sky=document.querySelector('#sky').getBoundingClientRect();
+    const actor=document.querySelector('[data-roommate='+reply.dataset.speaker+'] button').getBoundingClientRect();
+    const bubble=reply.getBoundingClientRect();
+    const tailX=bubble.left+parseFloat(reply.style.getPropertyValue('--reply-tail'));
+    const gap=reply.dataset.side==='below'?bubble.top-actor.bottom:actor.top-bubble.bottom;
+    return bubble.left>=sky.left&&bubble.right<=sky.right&&Math.abs(tailX-actor.left-actor.width/2)<2&&Math.abs(gap-9)<2;
+  });
+  assert.ok(anchored,id+' reply is detached or outside the map');
 }
 async function checkIntro(page,id){
   const copy=intros[ids.indexOf(id)];
@@ -98,10 +110,15 @@ async function checkSelection(page,id){
     assert.deepEqual(await desktop.locator('main > [id]').evaluateAll(nodes=>nodes.map(el=>el.id)),sections);
     assert.equal(await desktop.locator('.hero-principle').textContent(),'Enough abstraction makes it concrete.');
     assert.equal(await desktop.locator('.world-directory [data-world=ventures] .world-directory-name').textContent(),'Life');
+    assert.deepEqual(await desktop.locator('.world-directory small').allTextContents(),['理解世界','拓展认知','主动创造','感受世界','表达自我']);
     assert.deepEqual(await desktop.locator('.world-links [data-world=ventures] :is(strong,small)').allTextContents(),['Life','人生']);
     await capture(desktop,'1440x980');
     const gpt=desktop.getByRole('button',{name:'和 GPT 打招呼'});
     const roommateReply=desktop.locator('#roommate-reply');
+    for(const [id,name] of [['claude','Claude'],['gpt','GPT'],['deepseek','DeepSeek']]){
+      await desktop.getByRole('button',{name:'和 '+name+' 打招呼'}).click();
+      await checkRoommateReply(desktop,id);
+    }
     await gpt.click();
     assert.match(await roommateReply.textContent(),/^GPT ·/);
     const firstReply=await roommateReply.textContent();
@@ -111,9 +128,11 @@ async function checkSelection(page,id){
     await capture(desktop,'roommate-chat');
     await gpt.press('Escape');
     assert.equal(await roommateReply.textContent(),'');
-    await desktop.getByRole('button',{name:'敲响星核'}).click();
+    await desktop.getByRole('button',{name:'召唤室友！'}).click();
     assert.ok(await desktop.locator('#roommate-sighting.is-gathered').count());
     assert.match(await roommateReply.textContent(),/三位室友/);
+    assert.equal(await desktop.locator('#roommate-channel:visible').getAttribute('href'),'#playground');
+    assert.match(await desktop.locator('.terminal-chat-title').textContent(),/^三位室友上线/);
     await desktop.keyboard.press('Escape');
     assert.equal(await desktop.locator('#roommate-sighting.is-gathered').count(),0);
     await capture(desktop,'desktop-full',{fullPage:true});
@@ -182,10 +201,42 @@ async function checkSelection(page,id){
     await capture(desktop,'about',{section:'#about'});
     await desktop.goto(url+'#focus-intelligence');await checkFocus(desktop,'intelligence');
     await desktop.goto(url+'#world-intelligence');await checkSelection(desktop,'intelligence');
+    const intelligence=desktop.locator('#world-intelligence');
+    await intelligence.getByRole('button',{name:'GPT',exact:true}).press('Enter');
+    assert.match(await intelligence.getByRole('status').textContent(),/二十分钟/);
+    await intelligence.getByRole('button',{name:'DeepSeek',exact:true}).click();
+    assert.match(await intelligence.getByRole('status').textContent(),/改一个变量/);
+    assert.equal(await intelligence.locator('[aria-pressed=true]').count(),1);
     await desktop.locator('.world-directory [data-world=ventures]').click();
     await checkSelection(desktop,'ventures');
     await desktop.goBack();await checkSelection(desktop,'intelligence');
     await desktop.goForward();await checkSelection(desktop,'ventures');
+    const life=desktop.locator('#world-ventures');
+    await life.getByRole('button',{name:'迭代',exact:true}).click();
+    assert.match(await life.getByRole('status').textContent(),/哪条线该擦掉/);
+    await desktop.locator('.world-pager [rel=next]').press('Enter');
+    await checkSelection(desktop,'observatory');
+    await desktop.goBack();await checkSelection(desktop,'ventures');
+    await desktop.goForward();await checkSelection(desktop,'observatory');
+    await desktop.locator('.journal-feature summary').press('Enter');
+    assert.ok(await desktop.locator('.journal-feature[open] p').isVisible());
+    await desktop.locator('.journal-strip summary').first().click();
+    assert.ok(await desktop.locator('.journal-strip details[open] p').isVisible());
+    assert.equal(await desktop.locator('#world-observatory .world-copy').evaluate(el=>getComputedStyle(el).animationName),'none');
+    await desktop.locator('.world-pager [rel=next]').click();
+    await checkSelection(desktop,'playground');
+    const originalIdea=await desktop.locator('#idea-result').textContent();
+    await desktop.getByRole('button',{name:'抽一条灵感'}).click();
+    assert.notEqual(await desktop.locator('#idea-result').textContent(),originalIdea);
+    await desktop.getByRole('button',{name:'换形状'}).press('Enter');
+    await desktop.getByRole('button',{name:'换颜色'}).click();
+    assert.equal(await desktop.locator('#sticker-preview').getAttribute('aria-label'),'杏橙色圆形');
+    await desktop.locator('.world-pager [rel=next]').click();
+    await checkSelection(desktop,'origin');
+    await desktop.locator('.origin-modules summary').filter({hasText:'Pipeline'}).press('Enter');
+    assert.match(await desktop.locator('.origin-modules details[open] p').textContent(),/隔离环境执行/);
+    await desktop.locator('.world-pager [rel=prev]').click();
+    await checkSelection(desktop,'playground');
     await desktop.locator('#about summary').filter({hasText:/03 Agent$/}).click();
     assert.ok(await desktop.locator('#about details[open]').filter({hasText:'怎么让 AI 从回答问题'}).count());
     await desktop.locator('#writing').evaluate(el=>el.scrollIntoView({behavior:'instant'}));
@@ -222,6 +273,8 @@ async function checkSelection(page,id){
       await reply.locator('a').click();
       const sighting=desktop.locator('#roommate-sighting [data-roommate='+id+'].is-greeted');
       await sighting.waitFor();
+      await checkRoommateReply(desktop,id);
+      assert.equal((await roommateReply.textContent())+' 去星图看看 ↑',await reply.textContent());
       assert.equal(await sighting.locator('use').getAttribute('href'),'#roommate-'+id);
       assert.equal(await desktop.locator('#roommate-sighting .roommate-sighting:visible').count(),3);
     }
@@ -236,6 +289,24 @@ async function checkSelection(page,id){
       await capture(desktop,'roommate-'+id,{section:'#playground .console-layout'});
     }
     await command('clear');assert.equal(await output.textContent(),'');
+    const groupMessages=output.locator('.terminal-roommate');
+    await command('chat coding');
+    assert.match(await output.locator('.terminal-chat-title').textContent(),/^开发部日常.*本地剧本/);
+    assert.equal(await groupMessages.count(),0);
+    assert.ok(await output.locator('.terminal-typing').isVisible());
+    assert.equal(await output.locator('.terminal-typing span').evaluate(el=>getComputedStyle(el).animationName),'none');
+    await groupMessages.first().waitFor();
+    await output.locator('.terminal-typing').waitFor({state:'detached',timeout:6000});
+    assert.ok(await groupMessages.count()>=4&&await groupMessages.count()<=8);
+    assert.deepEqual([...new Set(await groupMessages.evaluateAll(rows=>rows.map(row=>row.dataset.speaker)))].sort(),['claude','deepseek','gpt']);
+    assert.ok(await groupMessages.evaluateAll(rows=>rows.every(row=>row.querySelector('use').getAttribute('href')==='#roommate-'+row.dataset.speaker)));
+    await capture(desktop,'roommate-group-chat',{section:'#playground .console-layout'});
+    await command('chat midnight');
+    await input.press('Control+l');
+    await desktop.waitForTimeout(800);
+    assert.equal(await output.textContent(),'','a cleared chat wrote back into the terminal');
+    await command('chat unknown');
+    assert.match(await output.locator('.terminal-error').textContent(),/没找到这个频道/);
     assert.deepEqual(errors,[]);
     console.log('1440px: raycast hover/click, all worlds, keyboard, hash/history, scroll navigation, timeline, console passed');
 
@@ -271,7 +342,10 @@ async function checkSelection(page,id){
         await page.emulateMedia({reducedMotion:'no-preference'});
         await checkRoamingBounds(page);
         await page.emulateMedia({reducedMotion:'reduce'});
-        await page.getByRole('button',{name:'和 DeepSeek 打招呼'}).tap();
+        for(const [id,name] of [['claude','Claude'],['gpt','GPT'],['deepseek','DeepSeek']]){
+          await page.getByRole('button',{name:'和 '+name+' 打招呼'}).tap();
+          await checkRoommateReply(page,id);
+        }
         assert.match(await page.locator('#roommate-reply').textContent(),/^DeepSeek ·/);
         await capture(page,'mobile-roommate-chat');
       }
@@ -289,6 +363,19 @@ async function checkSelection(page,id){
           return box.top<innerHeight&&box.bottom>0;
         });
         await capture(page,'mobile-console');
+        await page.getByRole('button',{name:'鱼生',exact:true}).tap();
+        await page.locator('.terminal-chat-title').waitFor();
+        assert.match(await page.locator('.terminal-chat-title').textContent(),/^鱼生与人生/);
+        await page.locator('.terminal-typing').waitFor({state:'detached',timeout:6000});
+        await capture(page,'mobile-roommate-group');
+        await page.locator('.world-pager [rel=next]').tap();
+        await checkSelection(page,'playground');
+        const worldNav=page.locator('.world-directory');
+        assert.ok(await worldNav.evaluate(el=>el.scrollWidth>el.clientWidth&&el.scrollLeft>0));
+        assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+        await page.getByRole('button',{name:'换颜色'}).tap();
+        assert.equal(await page.locator('#sticker-preview').getAttribute('data-color'),'1');
+        await capture(page,'mobile-world-playground',{section:'#worlds'});
       }
       await page.locator('.nav-links [href="#connect"]').click();
       assert.equal(new URL(page.url()).hash,'#connect');
@@ -327,12 +414,14 @@ async function checkSelection(page,id){
       return style.animationName==='roommate-roam'&&style.animationPlayState==='running'&&style.transform!=='matrix(1, 0, 0, 1, 0, 0)';
     }));
     assert.deepEqual(await tracks.evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node.querySelector('svg')).animationName)),['roommate-stroll','roommate-hop','roommate-swim']);
+    assert.ok(await tracks.evaluateAll(nodes=>nodes.every(node=>getComputedStyle(node.querySelector('button'),'::after').animationName==='roommate-idle')));
     await checkRoamingBounds(animated);
     await animated.getByRole('button',{name:'暂停动效'}).click();
     await animated.waitForFunction(()=>[...document.querySelectorAll('.roommate-track')].every(track=>{
       const [roam]=track.getAnimations();
       return roam?.playState==='paused'&&!roam.pending;
     }));
+    assert.ok(await tracks.evaluateAll(nodes=>nodes.every(node=>getComputedStyle(node.querySelector('button'),'::after').animationName==='none')));
     const parked=await tracks.evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node).transform));
     await animated.waitForTimeout(180);
     assert.deepEqual(await tracks.evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node).transform)),parked);
@@ -341,6 +430,7 @@ async function checkSelection(page,id){
     await capture(animated,'roommates-roaming');
     await animated.locator('.world-links [data-world=origin]').click();
     await checkFocus(animated,'origin');
+    assert.ok(await tracks.evaluateAll(nodes=>nodes.every(node=>getComputedStyle(node.querySelector('svg')).animationName==='roommate-idle-body')));
     await animated.waitForTimeout(1000);
     assert.equal(await animated.evaluate(()=>scrollY),0,'camera focus scrolled away from Hero');
     await animated.locator('.world-links [data-world=ventures]').click();
@@ -368,6 +458,10 @@ async function checkSelection(page,id){
     const fish=animated.locator('.roommate-card[data-command=deepseek]');
     await fish.hover();
     assert.equal(await fish.locator('svg').evaluate(svg=>getComputedStyle(svg).animationName),'roommate-glide');
+    await animated.getByRole('button',{name:'混沌脑洞',exact:true}).click();
+    assert.equal(await animated.locator('.terminal-typing span').evaluate(el=>getComputedStyle(el).animationName),'typing-pulse');
+    await fish.click();
+    assert.equal(await animated.locator('.terminal-typing').count(),0);
     await animated.locator('#home').evaluate(el=>el.scrollIntoView({behavior:'instant'}));
     await animated.getByRole('button',{name:'暂停动效'}).click();
     await animated.getByRole('button',{name:'继续动效'}).click();
