@@ -32,6 +32,26 @@ const intros=[
   '从生活里找灵感，再把它们变成有趣的东西。'
 ];
 const sections=['home','worlds','projects','writing','now','about','playground','connect'];
+async function checkRoamingBounds(page){
+  const overlaps=await page.locator('.roommate-track').evaluateAll(tracks=>{
+    const sky=document.querySelector('#sky').getBoundingClientRect();
+    const labels=[...document.querySelectorAll('.world-links a')].map(link=>link.getBoundingClientRect());
+    return tracks.flatMap(track=>{
+      const [roam]=track.getAnimations();
+      const start=roam.currentTime, duration=roam.effect.getTiming().duration;
+      const character=track.querySelector('.roommate-sighting'), failures=[];
+      for(let step=0;step<=20;step++){
+        roam.currentTime=duration*step/20;
+        const box=character.getBoundingClientRect();
+        if(box.left<sky.left-1||box.right>sky.right+1||box.top<sky.top-1||box.bottom>sky.bottom+1||
+          labels.some(label=>box.left<label.right&&box.right>label.left&&box.top<label.bottom&&box.bottom>label.top))failures.push([character.dataset.roommate,step]);
+      }
+      roam.currentTime=start;
+      return failures;
+    });
+  });
+  assert.deepEqual(overlaps,[],'roommates leave the sky or overlap planet labels');
+}
 async function checkIntro(page,id){
   const copy=intros[ids.indexOf(id)];
   assert.equal(await page.locator('#preview-intro').textContent(),copy);
@@ -74,11 +94,28 @@ async function checkSelection(page,id){
     const mapRoommates=desktop.locator('#roommate-sighting .roommate-sighting');
     assert.deepEqual(await mapRoommates.locator('span').allTextContents(),['Claude','GPT','DeepSeek']);
     assert.equal(await desktop.locator('#roommate-sighting .roommate-sighting:visible').count(),3);
+    assert.deepEqual(await desktop.locator('.roommate-track').evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node).animationName)),['none','none','none']);
     assert.deepEqual(await desktop.locator('main > [id]').evaluateAll(nodes=>nodes.map(el=>el.id)),sections);
     assert.equal(await desktop.locator('.hero-principle').textContent(),'Enough abstraction makes it concrete.');
     assert.equal(await desktop.locator('.world-directory [data-world=ventures] .world-directory-name').textContent(),'Life');
     assert.deepEqual(await desktop.locator('.world-links [data-world=ventures] :is(strong,small)').allTextContents(),['Life','人生']);
     await capture(desktop,'1440x980');
+    const gpt=desktop.getByRole('button',{name:'和 GPT 打招呼'});
+    const roommateReply=desktop.locator('#roommate-reply');
+    await gpt.click();
+    assert.match(await roommateReply.textContent(),/^GPT ·/);
+    const firstReply=await roommateReply.textContent();
+    await gpt.press('Enter');
+    assert.notEqual(await roommateReply.textContent(),firstReply);
+    assert.equal(new URL(desktop.url()).hash,'');
+    await capture(desktop,'roommate-chat');
+    await gpt.press('Escape');
+    assert.equal(await roommateReply.textContent(),'');
+    await desktop.getByRole('button',{name:'敲响星核'}).click();
+    assert.ok(await desktop.locator('#roommate-sighting.is-gathered').count());
+    assert.match(await roommateReply.textContent(),/三位室友/);
+    await desktop.keyboard.press('Escape');
+    assert.equal(await desktop.locator('#roommate-sighting.is-gathered').count(),0);
     await capture(desktop,'desktop-full',{fullPage:true});
     const canvas=desktop.locator('#star-map'), box=await canvas.boundingBox();
     const position={x:Math.round(box.width*.21),y:Math.round(box.height*.24)};
@@ -230,6 +267,14 @@ async function checkSelection(page,id){
       })),width+'px labels clipped');
       await capture(page,width+'x'+height);
       if(width<500)await capture(page,width+'x'+height+'-full',{fullPage:true});
+      if(width===390){
+        await page.emulateMedia({reducedMotion:'no-preference'});
+        await checkRoamingBounds(page);
+        await page.emulateMedia({reducedMotion:'reduce'});
+        await page.getByRole('button',{name:'和 DeepSeek 打招呼'}).tap();
+        assert.match(await page.locator('#roommate-reply').textContent(),/^DeepSeek ·/);
+        await capture(page,'mobile-roommate-chat');
+      }
       const label=page.locator('.world-links [data-world=observatory]');
       if(width<500)await label.tap();else await label.click();
       await checkFocus(page,'observatory');
@@ -276,6 +321,24 @@ async function checkSelection(page,id){
       window.requestAnimationFrame=callback=>raf(time=>{window.testFrames++;callback(time);});
     });
     await animated.goto(url);await animated.locator('#sky.is-rendered').waitFor();
+    const tracks=animated.locator('.roommate-track');
+    await animated.waitForFunction(()=>[...document.querySelectorAll('.roommate-track')].every(track=>{
+      const style=getComputedStyle(track);
+      return style.animationName==='roommate-roam'&&style.animationPlayState==='running'&&style.transform!=='matrix(1, 0, 0, 1, 0, 0)';
+    }));
+    assert.deepEqual(await tracks.evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node.querySelector('svg')).animationName)),['roommate-stroll','roommate-hop','roommate-swim']);
+    await checkRoamingBounds(animated);
+    await animated.getByRole('button',{name:'暂停动效'}).click();
+    await animated.waitForFunction(()=>[...document.querySelectorAll('.roommate-track')].every(track=>{
+      const [roam]=track.getAnimations();
+      return roam?.playState==='paused'&&!roam.pending;
+    }));
+    const parked=await tracks.evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node).transform));
+    await animated.waitForTimeout(180);
+    assert.deepEqual(await tracks.evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node).transform)),parked);
+    await animated.getByRole('button',{name:'继续动效'}).click();
+    await animated.locator('#home').evaluate(el=>el.scrollIntoView({behavior:'instant'}));
+    await capture(animated,'roommates-roaming');
     await animated.locator('.world-links [data-world=origin]').click();
     await checkFocus(animated,'origin');
     await animated.waitForTimeout(1000);
@@ -284,8 +347,10 @@ async function checkSelection(page,id){
     await checkFocus(animated,'ventures');
     await animated.locator('.world-links [data-world=intelligence]').click();
     await checkFocus(animated,'intelligence');
+    await animated.evaluate(()=>window.yubaiUniverse.overview());
     await animated.locator('#connect').evaluate(el=>el.scrollIntoView({behavior:'instant'}));
     await animated.waitForTimeout(300);
+    assert.deepEqual(await tracks.evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node).animationPlayState)),['paused','paused','paused']);
     const frames=await animated.evaluate(()=>window.testFrames);
     await animated.waitForTimeout(240);
     assert.equal(await animated.evaluate(()=>window.testFrames),frames,'RAF continued offscreen');

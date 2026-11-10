@@ -92,10 +92,11 @@
             <div class="sky-fallback" aria-hidden="true"></div>
             <canvas id="star-map" aria-hidden="true"></canvas>
             <div id="roommate-sighting" role="group" aria-label="星图室友">
-              <div class="roommate-sighting" data-roommate="claude"><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-claude"></use></svg><span>Claude</span></div>
-              <div class="roommate-sighting" data-roommate="gpt"><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-gpt"></use></svg><span>GPT</span></div>
-              <div class="roommate-sighting" data-roommate="deepseek"><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-deepseek"></use></svg><span>DeepSeek</span></div>
+              <div class="roommate-track claude-track"><div class="roommate-sighting" data-roommate="claude"><button class="roommate-trigger" type="button" aria-label="和 Claude 打招呼" disabled><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-claude"></use></svg><span>Claude</span></button></div></div>
+              <div class="roommate-track gpt-track"><div class="roommate-sighting" data-roommate="gpt"><button class="roommate-trigger" type="button" aria-label="和 GPT 打招呼" disabled><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-gpt"></use></svg><span>GPT</span></button></div></div>
+              <div class="roommate-track deepseek-track"><div class="roommate-sighting" data-roommate="deepseek"><button class="roommate-trigger" type="button" aria-label="和 DeepSeek 打招呼" disabled><svg viewBox="0 0 80 60" aria-hidden="true"><use href="#roommate-deepseek"></use></svg><span>DeepSeek</span></button></div></div>
             </div>
+            <p class="roommate-reply" id="roommate-reply" role="status"></p>
           </div>
           <nav class="world-links" aria-label="星球导航">
             <a href="#world-origin" data-world="origin" style="--x:12%;--y:7%;--world:#9dbbfa"><span>01</span><strong>Origin</strong><small>技术</small></a>
@@ -115,6 +116,7 @@
             <p class="preview-title"><strong id="preview-name">五个世界，一座宇宙。</strong> <span id="preview-name-zh"></span></p>
             <p id="preview-intro">选择一颗星球，近距离看看它的微缩世界。</p>
           </div>
+          <button type="button" id="roommate-call" hidden>敲响星核</button>
           <a id="view-story" href="#world-origin" hidden>View Story <span aria-hidden="true">↗</span></a>
         </aside>
       </div>

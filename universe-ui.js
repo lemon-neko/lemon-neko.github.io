@@ -11,6 +11,7 @@
   const previewIndex=document.querySelector('#preview-index'), previewName=document.querySelector('#preview-name');
   const previewNameZh=document.querySelector('#preview-name-zh'), previewIntro=document.querySelector('#preview-intro');
   const viewStory=document.querySelector('#view-story');
+  const call=document.querySelector('#roommate-call'), reply=document.querySelector('#roommate-reply');
   const tour=document.querySelector('#tour-toggle'), explore=document.querySelector('#explore-universe');
   const close=document.querySelector('[data-close-world]'), preference=matchMedia('(prefers-reduced-motion: reduce)');
   const nav=[...document.querySelectorAll('.nav-links a')];
@@ -48,6 +49,7 @@
       link.classList.toggle('is-hot',isLabel&&link.dataset.world===hovered);
     });
     map.dataset.mode=tourIndex>=0?'auto':selected?'focus':'overview';
+    call.hidden=Boolean(selected);
     if(shown!==id){
       shown=id;
       previewIndex.hidden=!id;
@@ -153,16 +155,19 @@
   preview.hidden=false;
   tour.hidden=false;
   tour.addEventListener('click',()=>tourIndex<0?startTour():stopTour(),options);
+  const directControls='#tour-toggle,#view-story,.roommate-trigger,#roommate-call';
   document.addEventListener('keydown',event=>{
-    if(event.key==='Escape'&&(active||hovered||tourIndex>=0)){event.preventDefault();overview({restore:true});}
-    else if(!(event.target.closest('#tour-toggle,#view-story')&&(event.key==='Enter'||event.key===' ')))stopTour();
+    if(event.key==='Escape'&&reply.textContent){event.preventDefault();clearGreeting();}
+    else if(event.key==='Escape'&&(active||hovered||tourIndex>=0)){event.preventDefault();overview({restore:true});}
+    else if(!(event.target.closest(directControls)&&(event.key==='Enter'||event.key===' ')))stopTour();
   },{...options,capture:true});
   window.addEventListener('hashchange',followHash,options);
   document.addEventListener('pointerdown',event=>{
-    if(!event.target.closest('#tour-toggle,#view-story'))stopTour();
+    if(!event.target.closest(directControls))stopTour();
   },options);
   for(const type of ['wheel','touchmove'])window.addEventListener(type,stopTour,{...options,passive:true});
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTour();},options);
+  function syncRoommateMotion(){sky.classList.toggle('is-motion-paused',paused||document.hidden);}
+  document.addEventListener('visibilitychange',()=>{syncRoommateMotion();if(document.hidden)stopTour();},options);
 
   function shiftJournal(){
     if(observatory.hidden||preference.matches)return;
@@ -193,11 +198,19 @@
   },{threshold:.1});
   document.querySelectorAll('.section-heading,.project-card,.essay-feature').forEach(el=>revealObserver.observe(el));
   document.querySelectorAll('.project-card').forEach((el,i)=>el.style.setProperty('--reveal-delay',i*65+'ms'));
-  const sightings=new Map([...sky.querySelectorAll('[data-roommate]')].map(el=>[el.dataset.roommate,el]));
+  const roommateGroup=document.querySelector('#roommate-sighting');
+  const sightings=new Map([...roommateGroup.querySelectorAll('[data-roommate]')].map(el=>[el.dataset.roommate,el]));
+  const lines={
+    claude:['等我折个书角。好了，听你说。','今天这页，借着星光刚好能读。','我给你留了个靠窗的位置。'],
+    gpt:['我捡到一颗星，正在想它能做什么。','脑洞充电完毕。要不要一起瞎想五分钟？','我给刚才路过的彗星起了个名字。叫小逗号。'],
+    deepseek:['咕噜！刚才那个泡泡是我吹的。','今天游得慢，正好可以数星星。','星图里有水吗？嘘，假装有。']
+  };
   let greeting, sightingTimer=0, pendingSighting=false;
   function clearGreeting(){
     clearTimeout(sightingTimer);
     greeting?.classList.remove('is-greeted');
+    roommateGroup.classList.remove('is-gathered');
+    reply.textContent='';
     greeting=null;
     pendingSighting=false;
   }
@@ -206,6 +219,25 @@
     greeting.classList.add('is-greeted');
     sightingTimer=setTimeout(clearGreeting,5200);
   }
+  sightings.forEach((roommate,id)=>{
+    const button=roommate.querySelector('button'), name=button.textContent.trim();
+    let line=0;
+    button.disabled=false;
+    button.addEventListener('click',()=>{
+      stopTour();clearGreeting();
+      greeting=roommate;
+      reply.textContent=name+' · '+lines[id][line];
+      line=(line+1)%lines[id].length;
+      showRoommate();
+    },options);
+  });
+  call.addEventListener('click',()=>{
+    stopTour();clearGreeting();
+    roommateGroup.classList.add('is-gathered');
+    reply.textContent='叮！三位室友都听见了。';
+    if(!preference.matches&&!paused)renderer?.pulse();
+    sightingTimer=setTimeout(clearGreeting,5200);
+  },options);
   window.addEventListener('yubai:roommate',({detail:{id}})=>{
     const roommate=sightings.get(id);
     if(!roommate)return;
@@ -216,6 +248,7 @@
     else pendingSighting=true;
   },options);
   const tourObserver=new IntersectionObserver(([entry])=>{
+    sky.classList.toggle('is-in-view',entry.isIntersecting);
     if(pendingSighting&&entry.isIntersecting)showRoommate();
     if(tourIndex<0)return;
     const box=sky.getBoundingClientRect();
@@ -223,6 +256,7 @@
     else if(tourHasEntered)stopTour();
   });
   tourObserver.observe(sky);
+  syncRoommateMotion();
   followHash();syncNav();
   window.yubaiUniverse={visit,overview};
   const terminal=document.querySelector('#playground');
@@ -259,7 +293,7 @@
       update();motion.hidden=preference.matches;
       motion.addEventListener('click',()=>{
         paused=!paused;motion.textContent=paused?'继续动效':'暂停动效';
-        motion.setAttribute('aria-pressed',String(paused));renderer?.refresh();
+        motion.setAttribute('aria-pressed',String(paused));syncRoommateMotion();renderer?.refresh();
       },options);
       preference.addEventListener('change',()=>{motion.hidden=preference.matches||!renderer;renderer?.refresh();},options);
     }).catch(fallback);
