@@ -57,7 +57,7 @@ h1{margin:10px 0 3px;font-size:clamp(4rem,6.1vw,6rem);font-weight:650;line-heigh
 .roommate-sighting svg{width:clamp(43px,5.5vw,75px);height:auto;aspect-ratio:4/3;filter:drop-shadow(0 4px 8px #060a17b0)}
 .roommate-sighting[data-roommate=gpt]{--sighting-x:37%;--sighting-y:77%}
 .roommate-sighting[data-roommate=deepseek]{--sighting-x:43%;--sighting-y:24%}
-.roommate-sighting.is-greeted{color:#fff;--sprite-play:running}
+.roommate-sighting.is-greeted{color:#fff}
 .roommate-sighting.is-greeted svg{filter:drop-shadow(0 0 8px #a6b1f1)}
 .universe-map:is([data-mode=focus],[data-mode=auto]) [data-roommate=claude]{--sighting-x:76%;--sighting-y:76%}
 .universe-map:is([data-mode=focus],[data-mode=auto]) [data-roommate=gpt]{--sighting-x:79%;--sighting-y:25%}
@@ -71,15 +71,12 @@ h1{margin:10px 0 3px;font-size:clamp(4rem,6.1vw,6rem);font-weight:650;line-heigh
 @media(prefers-reduced-motion:no-preference){
  .roommate-sighting.is-greeted svg{animation:roommate-nod 650ms ease-in-out 2}
  .roommate-sighting[data-roommate=deepseek].is-greeted svg{animation:roommate-glide 900ms ease-in-out 2 alternate}
- .roommate-card:is(:hover,:focus-visible):enabled{--sprite-play:running}
  .roommate-card[data-command=claude]:is(:hover,:focus-visible):enabled svg{animation:roommate-nod 1.4s ease-in-out both}
  .roommate-card[data-command=gpt]:is(:hover,:focus-visible):enabled svg{animation:roommate-hover 1.8s ease-in-out infinite alternate}
  .roommate-card[data-command=deepseek]:is(:hover,:focus-visible):enabled svg{animation:roommate-glide 1.7s ease-in-out infinite alternate}
- .roommate-thought{transform-box:fill-box;transform-origin:center;animation:roommate-idea 2.4s ease-in-out infinite alternate;animation-play-state:var(--sprite-play,paused)}
  @keyframes roommate-nod{35%{transform:translateY(1px) rotate(-4deg)}70%{transform:rotate(2deg)}}
  @keyframes roommate-hover{to{transform:translateY(-4px)}}
  @keyframes roommate-glide{to{transform:translate(4px,-2px) rotate(4deg)}}
- @keyframes roommate-idea{to{transform:translateY(-2px);opacity:.68}}
 }
 /* ---------- Interactive terminal ---------- */
 .terminal-shell {
