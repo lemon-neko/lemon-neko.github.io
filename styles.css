@@ -576,10 +576,10 @@ main>.section{padding-block:var(--section-space);border-bottom:1px solid var(--b
 .notes-list p{margin:7px 0;font-size:.85rem}
 .note-text summary{width:fit-content;padding:10px 0;min-height:44px;color:var(--accent-2);font-size:.83rem}
 .note-text a{color:var(--accent-2);text-underline-offset:4px;font-size:.83rem}
-:is(.notes-podcasts,.notes-in-progress){margin-top:26px;padding-top:15px;border-top:1px solid var(--border);color:var(--muted)}
-:is(.notes-podcasts,.notes-in-progress) h3{margin:0;font-size:.93rem;color:var(--text)}
-:is(.notes-podcasts,.notes-in-progress) h3 span{margin-inline-start:6px;color:var(--accent);font-size:.75rem;font-weight:500}
-:is(.notes-podcasts,.notes-in-progress) ul{display:flex;flex-wrap:wrap;gap:5px 22px;margin:7px 0 0;padding:0;list-style:none;font-size:.84rem}
+.notes-podcasts{margin-top:26px;padding-top:15px;border-top:1px solid var(--border);color:var(--muted)}
+.notes-podcasts h3{margin:0;font-size:.93rem;color:var(--text)}
+.notes-podcasts h3 span{margin-inline-start:6px;color:var(--accent);font-size:.75rem;font-weight:500}
+.notes-podcasts ul{display:flex;flex-wrap:wrap;gap:5px 22px;margin:7px 0 0;padding:0;list-style:none;font-size:.84rem}
 .currently-list,.about-path,.interests{padding:0;list-style:none;margin:0}
 .currently-list{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px clamp(20px,7vw,94px)}
 .currently-list li{border-top:1px solid var(--border);padding-top:12px}

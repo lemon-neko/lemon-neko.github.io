@@ -190,15 +190,12 @@ async function checkSelection(page,id){
       'public/project-carelink-workbench.jpg','public/project-podcast-recording.jpg','public/project-yougan-interface.jpg'
     ]);
     assert.deepEqual(await desktop.locator('.currently-list strong').allTextContents(),['Building','Exploring','Creating','Life']);
-    assert.equal(await desktop.locator('.notes-in-progress li').count(),2);
     const podcasts=desktop.getByRole('region',{name:'播客节目 小宇宙'});
     for(const [name,id] of [['观猹','6a9ad194c138f60c044ae4bf'],['熠点点','68eb24418a7ae5b458b63104']]){
       const link=podcasts.getByRole('link',{name:new RegExp('^'+name)});
       assert.equal(await link.getAttribute('href'),'https://www.xiaoyuzhoufm.com/podcast/'+id);
       assert.equal(await link.getAttribute('target'),'_blank');
     }
-    assert.equal(await desktop.locator('.notes-in-progress a').count(),0);
-    assert.equal(await desktop.locator('#notes-in-progress-title span').textContent(),'Draft');
     assert.ok((await desktop.locator('.note-podcast .note-kind').textContent()).includes('虚构样例'));
     assert.ok((await desktop.locator('.currently-list').textContent()).includes('优先验证 AI 入住咨询和院内照护协同'));
     assert.equal(await desktop.locator('#connect-title').textContent(),'来打个招呼');

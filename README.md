@@ -15,7 +15,7 @@ python3 -m http.server --bind 127.0.0.1 8080
 ## 内容与交互
 
 - 白羽星核与 技术、智能、人生、观察者、创意五座微缩世界。正文里的简介是预览、无障碍描述和自动探索的共同数据来源。「人生」保留 `ventures` 内部标识。可以点击模型或使用 HTML 星球链接在首屏聚焦。悬停和键盘聚焦会显示简介，点击后保留预览和 `#focus-ventures` 等定位链接。View Story 进入唯一的 Worlds 详情区，`#world-ventures` 等直达链接保留。Escape 或「返回星图」回到首屏。自动探索由访客开启，每 4.6 秒更新一次镜头与预览，主动操作、离开星图或切到后台时停止。五个详情采用不同的插图和排版，观察者的实拍照片支持轻微滚动视差，创意页有可用键盘或触控打开的小物件。
-- 作品、当前坐标、观察笔记、个人理念与 GitHub 均可直接访问。纵向顺序为 Hero → Worlds → Selected Work → Field Notes → Now → About → Space Console → Connect。Field Notes 收录有感公开目录中的编辑手记（可在本页展开全文）、播客工作台的公开虚构样例和一篇通用推理测评框架笔记，尚未发布的想法单列为「还在想的题目」。未添加未证实的发布日期、工作经历或联系渠道。
+- 作品、当前坐标、观察笔记、个人理念与 GitHub 均可直接访问。纵向顺序为 Hero → Worlds → Selected Work → Field Notes → Now → About → Space Console → Connect。Field Notes 收录有感公开目录中的编辑手记（可在本页展开全文）、播客工作台的公开虚构样例、一篇通用推理测评框架笔记和两个小宇宙节目链接。未添加未证实的发布日期、工作经历或联系渠道。
 - 终端保留 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo`、`clear`、历史与隐藏 `neko`；`universe` 返回全景，`orbit` 开启自动探索，`visit <planet>` 打开指定星球的故事。快捷按钮复用相同的命令解析与历史。项目链接与当前状态直接读取页面内容。`visit life` 同样能进入「人生」。`claude`、`gpt`、`deepseek` 是本地彩蛋，可以输入命令，也可以点选终端旁的室友。三位室友默认出现在星图；两种命令方式都会显示头像和预写回复，回到星图会短暂高亮对应角色。Claude 与 GPT 使用按参考图制作的透明底角色插画，DeepSeek 使用原角色的透明底版本。
 - 无 WebGL、节省流量、模块加载失败或直接打开本地文件时显示静态星图；HTML 入口仍然可用。减少动态效果时保留可点击的静止 3D 场景。场景离开视口或切到后台后暂停渲染。
 - 星图点角色可抽取问候。「召唤室友！」会在访客终端打开群聊。终端支持 `summon`、`chat` 及 `chat midnight`、`chat coding`、`chat life`、`chat yubai`、`chat chaos`，也可点频道快捷按钮。问候、单聊和群聊均为虚构的本地角色剧本，群聊逐条出现。输入新命令会结束当前群聊的待发送消息。
