@@ -10,6 +10,7 @@
   <meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)">
 
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="origin-lab/origin-lab.css">
   <link rel="icon" href="public/yubai-mark.svg" type="image/svg+xml">
   <link rel="icon" href="public/yubai-mark-32.png" type="image/png" sizes="32x32">
   <link rel="shortcut icon" href="public/yubai-mark-32.png" type="image/png">
@@ -18,6 +19,7 @@
   <script src="roommate-dialogue.js" defer></script>
   <script src="terminal.js" defer></script>
   <script src="universe-ui.js" defer></script>
+  <script src="origin-lab/origin-lab-loader.js" defer></script>
 
   <meta property="og:type" content="profile">
   <meta property="og:url" content="https://lemon-neko.github.io/">
@@ -168,6 +170,105 @@
             </details>
             <a href="#about">关于羽白 →</a>
           </div>
+          <section class="origin-lab" id="origin-lab" aria-labelledby="origin-lab-title">
+            <header class="lab-header">
+              <div>
+                <h4 id="origin-lab-title" lang="en">ORIGIN LAB</h4>
+                <p class="lab-subtitle" lang="en">FROM SILICON TO INTELLIGENCE</p>
+                <p class="lab-lede">从一颗芯片，到一个能回应人的系统。</p>
+                <p class="lab-aux" lang="en">Explore the architecture behind artificial intelligence.</p>
+              </div>
+              <div class="lab-modes" role="group" aria-label="实验室视图" data-lab-interactive hidden>
+                <button type="button" data-mode="system" aria-pressed="true">System</button>
+                <button type="button" data-mode="exploded" aria-pressed="false">Exploded</button>
+                <button type="button" data-mode="flow" aria-pressed="false">Flow</button>
+              </div>
+            </header>
+            <div class="lab-layers" role="group" aria-label="六层架构" data-lab-interactive hidden></div>
+            <div class="lab-workspace">
+              <figure class="lab-figure">
+                <div class="lab-stage">
+                  <svg class="lab-schematic" viewBox="0 0 720 365" role="img" aria-label="六层 AI 系统架构。GPU Die 和 HBM 在中介层上并排封装，算子、运行时、模型、智能体与应用是逻辑层。">
+                    <defs>
+                      <linearGradient id="lab-fallback-metal" x2=".6" y2="1"><stop stop-color="#385b7f"/><stop offset="1" stop-color="#182c49"/></linearGradient>
+                      <pattern id="lab-fallback-sm" width="17" height="16" patternUnits="userSpaceOnUse"><path d="M2 2h12v11H2z" fill="#87b9e9" stroke="#55789f"/></pattern>
+                    </defs>
+                    <path d="M324 236h28l14-21v-98h42m70 0h47m68 33v46m-68 33h-45m-8 0v55h52" fill="none" stroke="#49698e" stroke-width="2"/>
+                    <g data-layer="hardware">
+                      <path d="M42 196l102-68 198 79-100 77L42 214z" fill="#111e32" stroke="#54749a"/>
+                      <path d="M42 196l102-68 198 79-100 68z" fill="url(#lab-fallback-metal)" stroke="#80b5db"/>
+                      <path d="M59 195l86-58 178 70-82 57z" fill="#172c49" stroke="#6a8cae"/>
+                      <path d="M117 193l51-37 93 37-49 38z" fill="url(#lab-fallback-sm)" stroke="#b4dcf6" stroke-width="2"/>
+                      <path d="M91 180l20-14 31 12-20 15zm-16 22l19-13 30 12-19 14zm151 35l19-15 31 12-20 15zm27-23l20-15 30 12-20 15z" fill="#78a8ae" stroke="#a3d4d4"/>
+                      <text x="125" y="309">GPU Package</text>
+                      <text x="87" y="158">HBM</text>
+                      <text x="192" y="152">GPU Die</text>
+                      <text x="252" y="272">Interposer</text>
+                    </g>
+                    <g data-layer="compute"><rect x="391" y="87" width="117" height="61" rx="5"/><path d="M411 104h77m-77 7h44"/><text x="410" y="134">Compute</text></g>
+                    <g data-layer="runtime"><rect x="525" y="87" width="153" height="61" rx="5"/><path d="M545 104h112m-112 7h56"/><text x="544" y="134">Memory &amp; Runtime</text></g>
+                    <g data-layer="model"><rect x="525" y="192" width="153" height="61" rx="5"/><path d="M545 209h112m-112 7h68"/><text x="544" y="240">Transformer</text></g>
+                    <g data-layer="agent"><rect x="391" y="192" width="117" height="61" rx="5"/><path d="M411 209h77m-77 7h39"/><text x="410" y="240">Agent</text></g>
+                    <g data-layer="application"><rect x="525" y="271" width="153" height="61" rx="5"/><path d="M545 288h112m-112 7h50"/><text x="544" y="319">Application</text></g>
+                  </svg>
+                  <canvas class="lab-canvas" tabindex="0" aria-label="Origin Lab 3D 场景" aria-describedby="origin-lab-camera-hint" hidden></canvas>
+                  <div class="lab-annotations" aria-hidden="true"></div>
+                  <p class="lab-stage-label">AI System · 架构示意</p>
+                </div>
+                <figcaption class="lab-caption">
+                  <span class="lab-stage-hint" id="origin-lab-camera-hint">六层逻辑架构与 GPU 概念封装示意。</span>
+                  <button type="button" data-action="camera" hidden>重置视角</button>
+                </figcaption>
+              </figure>
+              <aside class="lab-inspector" aria-label="组件观察">
+                <div class="lab-part-picker" data-lab-interactive hidden>
+                  <label for="origin-lab-part">零件目录</label>
+                  <select id="origin-lab-part"></select>
+                </div>
+                <div class="lab-inspection" aria-live="polite" aria-atomic="true">
+                  <p class="lab-part-meta">Hardware / 物理封装</p>
+                  <h5 class="lab-part-name">GPU Package</h5>
+                  <p class="lab-part-description">以带 HBM 的数据中心 GPU 为参考的概念封装。GPU Die 与 HBM 并排连接到中介层。</p>
+                  <dl class="lab-part-details" data-lab-interactive hidden>
+                    <div><dt>功能</dt><dd data-detail="function"></dd></div>
+                    <div><dt>关联组件</dt><dd data-detail="connections"></dd></div>
+                    <div><dt>工程说明</dt><dd data-detail="notes"></dd></div>
+                  </dl>
+                </div>
+                <div class="lab-mini" hidden></div>
+              </aside>
+            </div>
+            <div class="lab-controls" data-lab-interactive hidden>
+              <div class="lab-split-control">
+                <label for="origin-lab-explode">拆解进度 <output for="origin-lab-explode">0%</output></label>
+                <input id="origin-lab-explode" type="range" min="0" max="100" value="0" aria-label="拆解进度">
+                <div class="lab-scale" aria-hidden="true"><span>0</span><span>25</span><span>50</span><span>75</span><span>100%</span></div>
+              </div>
+              <div class="lab-actions" role="group" aria-label="实验室操作">
+                <button type="button" data-action="assemble">Assemble</button>
+                <button type="button" data-action="explode">Explode</button>
+                <button type="button" data-action="run">Run request</button>
+                <button type="button" data-action="reset">Reset</button>
+              </div>
+            </div>
+            <section class="lab-request" aria-labelledby="origin-lab-request" hidden>
+              <div class="lab-request-head">
+                <div><h5 id="origin-lab-request">请求回放</h5><p class="lab-prompt">帮我总结一份技术报告，并提取重点。</p></div>
+                <div class="lab-actions" role="group" aria-label="回放操作">
+                  <button type="button" data-action="play">播放</button>
+                  <button type="button" data-action="next">单步</button>
+                  <button type="button" data-action="replay">重播</button>
+                </div>
+              </div>
+              <details class="lab-report">
+                <summary>查看本次模拟的报告节选</summary>
+                <p></p>
+              </details>
+              <ol class="lab-steps" aria-label="执行步骤"></ol>
+              <div class="lab-current-step" role="status"></div>
+              <p class="lab-simulation-note">教学模拟 · 使用内置示例报告和预设执行轨迹。</p>
+            </section>
+          </section>
         </article>
         <article class="world-note" id="world-intelligence" data-name="Intelligence">
           <figure class="world-visual">

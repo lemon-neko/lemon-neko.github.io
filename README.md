@@ -19,12 +19,14 @@ python3 -m http.server --bind 127.0.0.1 8080
 - 终端保留 `help`、`about`、`now`、`projects`、`links`、`fortune`、`echo`、`clear`、历史与隐藏 `neko`；`universe` 返回全景，`orbit` 开启自动探索，`visit <planet>` 打开指定星球的故事。快捷按钮复用相同的命令解析与历史。项目链接与当前状态直接读取页面内容。`visit life` 同样能进入「人生」。`claude`、`gpt`、`deepseek` 是本地彩蛋，可以输入命令，也可以点选终端旁的室友。三位室友默认出现在星图；两种命令方式都会显示头像和预写回复，回到星图会短暂高亮对应角色。Claude 与 GPT 使用按参考图制作的透明底角色插画，DeepSeek 使用原角色的透明底版本。
 - 无 WebGL、节省流量、模块加载失败或直接打开本地文件时显示静态星图；HTML 入口仍然可用。减少动态效果时保留可点击的静止 3D 场景。场景离开视口或切到后台后暂停渲染。
 - 星图点角色可抽取问候。「召唤室友！」会在访客终端打开群聊。终端支持 `summon`、`chat` 及 `chat midnight`、`chat coding`、`chat life`、`chat yubai`、`chat chaos`，也可点频道快捷按钮。问候、单聊和群聊均为虚构的本地角色剧本，群聊逐条出现。输入新命令会结束当前群聊的待发送消息。
+- 进入「技术」并滚动到 Origin Lab，可拆解 GPU 封装、检查六层架构的零件，或播放一次预设 AI 请求。场景在可见时加载，WebGL 不可用或系统要求减少动态效果时可通过 2D 示意查看零件及单步回放。直接打开本地文件时显示静态 2D 图。
 
 ## 文件与资源
 
 - `index.html`、`styles.css`：语义结构、作品数据、SEO 与桌面/移动端布局。
 - `universe-ui.js`：HTML 星球入口、详情、导航及终端桥接。
 - `universe.js`、`universe-models.js`：实时场景、模型、相机和射线交互；按模型包围盒和画布宽高比取景。
+- `origin-lab/`：实验室按需加载、组件资料、3D 场景和界面。
 - `terminal.js`、`roommate-dialogue.js`：访客终端与本地室友剧本。
 - `public/vendor/`：本地固定版本 Three.js 0.180.0 模块及 MIT 许可。
 - `public/universe-*.webp`：独立生成的深空远景和实时模型的静态回退渲染。远景由 ImageGen 生成，提示为「近黑靛色深空、细小银蓝星光、右上远处星系、右下蓝色地平线；左侧留空，无文字或前景对象」。
